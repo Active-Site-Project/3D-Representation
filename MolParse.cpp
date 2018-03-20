@@ -63,7 +63,7 @@ void MolParse::parseData() //parse data function definition
 Atom* MolParse::getAtomList() //returns list of atoms for use in other programs
 {
   if (atomCount == 0) //there has to be atoms in elementList or error is thrown
-    void parseData(); //function that parses mol file and retrieves coordinate and bonding information
+    parseData(); //function that parses mol file and retrieves coordinate and bonding information
     //throw("no atoms currently available"); //not really sure how to handle errors in C++
   return elementList;
 }
