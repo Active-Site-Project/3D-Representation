@@ -11,7 +11,6 @@ class MolParse
     MolParse(); //default constructor - do not recommend as original directory setup is probably different than what we need
     MolParse(std::string directory); //constructor that initializes a directory that can contain multiple mol files
     MolParse(std::string directory, std::string filename); //constructor that initializes a directory and a specific filename
-    void parseData(); //function that parses mol file and retrieves coordinate and bonding information
     int getAtomCount(); //returns number of atoms in mol file
     int getBondCount(); //returns number of bonds in mol file
     Atom* getAtomList(); //returns list of atoms generated after parsing mol file (only use after parsing the data)
@@ -28,6 +27,7 @@ class MolParse
     int bondCount; //number of bonds (have not done much with this)
     Atom *elementList; //list of atoms w/ info extracted from mol file
     int (*bondNum)[3]; //list of bond information (possibly need to arrange this in a more intuitive manner later on)
+    void parseData(); //function that parses mol file and retrieves coordinate and bonding information
 };
 
 #endif
