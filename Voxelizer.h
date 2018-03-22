@@ -4,6 +4,7 @@
 
 #include "MolParse.h"
 #include "Voxel.h"
+#include <fstream>
 #include <vector>
 
 class Voxelizer
@@ -15,14 +16,13 @@ class Voxelizer
 	  double voxelSize;   //will be length width and height of each voxel
 	  double x_transform, y_transform, z_transform; //transform entire molecule onto pos xy plane, 1st octet
 
-	  void setTransform(const Atom * const &, uint32_t); //finds transform to move all points into octet 1 (x,y,z > 0)
-	  void setGridDimensions(const Atom * const &, uint32_t); //sets num of voxels to cubically encapsulate all points
-	  void populateGrid(const Atom * const &, uint32_t); //will go through and populate protons, neutrons and electrons
+	  void setGrid(Atom * const &, uint32_t); //finds transform to move all points into octet 1 (x,y,z > 0), and cube dimensions in numOfVoxels
+	  void populateGrid(Atom * const &, uint32_t); //will go through and populate protons, neutrons and electrons
 
   public:
 	  Voxelizer(); //empty grid, will need to provide molParse object to voxelize later with Voxelize function
 	  Voxelizer(const Voxelizer &); //object will be voxelized if copying object is voxelized
-	  Voxelizer(const MolParse &, uint32_t); //automatically voxelizes the molecule... RECOMMENDED
+	  Voxelizer(const MolParse &, uint32_t = 0.5); //automatically voxelizes the molecule with 0.5 voxelSize... RECOMMENDED
 
 	  void setVoxelSize(double v_size);
 	  void voxelize(const MolParse &);
