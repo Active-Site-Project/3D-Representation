@@ -1,4 +1,3 @@
-#pragma once
 #ifndef VOXELIZER_H_NAP
 #define VOXELIZER_H_NAP
 

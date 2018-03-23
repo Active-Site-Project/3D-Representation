@@ -1,4 +1,3 @@
-#pragma once
 #ifndef VOXEL_H_NAP
 #define VOXEL_H_NAP
 
