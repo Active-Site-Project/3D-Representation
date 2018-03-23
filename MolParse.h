@@ -11,13 +11,13 @@ class MolParse
     MolParse(); //default constructor - do not recommend as original directory setup is probably different than what we need
     MolParse(std::string directory); //constructor that initializes a directory that can contain multiple mol files
     MolParse(std::string directory, std::string filename); //constructor that initializes a directory and a specific filename
-    int getAtomCount(); //returns number of atoms in mol file
-    int getBondCount(); //returns number of bonds in mol file
+    int getAtomCount() const; //returns number of atoms in mol file
+    int getBondCount() const; //returns number of bonds in mol file
     Atom* getAtomList(); //returns list of atoms generated after parsing mol file (only use after parsing the data)
     void setDirectory(std::string); //set the directory to extract mol files
     void setFileName(std::string); //set the filename that parseData function will extract data from
-    std::string getDirectoryName(); //in case user needs to quickly look at the name of the directory
-    std::string getFileName(); //in case user needs to quickly look at mol file name
+    std::string getDirectoryName() const; //in case user needs to quickly look at the name of the directory
+    std::string getFileName() const; //in case user needs to quickly look at mol file name
     void setHeaderLength(int); //set number of lines to skip at beginning of file (in my experience it has always been three but it could maybe vary)
   private:
     std::string directory; //directory from which data is extracted

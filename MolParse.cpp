@@ -60,7 +60,7 @@ void MolParse::parseData() //parse data function definition
   molFile.close();
 }
 
-Atom* MolParse::getAtomList() //returns list of atoms for use in other programs
+Atom* MolParse::getAtomList() //returns list of atoms for use in other program
 {
   if (atomCount == 0) //there has to be atoms in elementList or error is thrown
     parseData(); //function that parses mol file and retrieves coordinate and bonding information
@@ -68,12 +68,12 @@ Atom* MolParse::getAtomList() //returns list of atoms for use in other programs
   return elementList;
 }
 
-int MolParse::getAtomCount() //returns number of atoms from mol file (if mole file has not been read, the count is zero)
+int MolParse::getAtomCount() const //returns number of atoms from mol file (if mole file has not been read, the count is zero)
 {
   return atomCount;
 }
 
-int MolParse::getBondCount() //returns number of bond from mol file (if mole file has not been read, the count is zero)
+int MolParse::getBondCount() const //returns number of bond from mol file (if mole file has not been read, the count is zero)
 {
   return bondCount;
 }
@@ -88,12 +88,12 @@ void MolParse::setFileName(std::string fileName) //gives user option to set diff
   filename = fileName;
 }
 
-std::string MolParse::getDirectoryName() //returns name of directory MolParse object is set to
+std::string MolParse::getDirectoryName() const //returns name of directory MolParse object is set to
 {
   return directory;
 }
 
-std::string MolParse::getFileName() //returns name of file MolParse object is set to
+std::string MolParse::getFileName() const //returns name of file MolParse object is set to
 {
   return filename;
 }

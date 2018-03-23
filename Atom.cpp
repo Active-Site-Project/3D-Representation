@@ -14,25 +14,25 @@ x(xPos), y(yPos), z(zPos), elementName(elemAbbrev)
 }
 
 //returns x-coordinate
-double Atom::getX()
+double Atom::getX() const
 {
   return x;
 }
 
 //returns y-coordinate
-double Atom::getY()
+double Atom::getY() const
 {
   return y;
 }
 
 //returns z-coordinate
-double Atom::getZ()
+double Atom::getZ() const
 {
   return z;
 }
 
 //returns name/abbreviation of element
-std::string Atom::getElemName()
+std::string Atom::getElemName() const
 {
   return elementName;
 }
