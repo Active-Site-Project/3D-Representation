@@ -39,6 +39,4 @@ Thumbs.db
 # Miscellaneous #
 #################
 main.cpp
-
-# make file #
-makefile
+main
