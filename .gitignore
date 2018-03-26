@@ -39,4 +39,5 @@ Thumbs.db
 # Miscellaneous #
 #################
 main.cpp
-runparse.sh
+main
+makefile
