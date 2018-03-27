@@ -98,7 +98,7 @@ double Voxelizer::getZTransform() { return z_transform; }
 //private
 
 //working
-void Voxelizer::setGrid(Atom * const &a, uint32_t count)
+void Voxelizer::setGrid(const Atom * const &a, uint32_t count)
 {
 	std::ifstream e_cloud; //file handle to get points of electrons per atom
 	double min_x, min_y, min_z, max_x, max_y, max_z; //keep track of smallest x and y in graph
@@ -179,7 +179,48 @@ void Voxelizer::setGrid(Atom * const &a, uint32_t count)
 }
 
 //in progress
-void Voxelizer::populateGrid(Atom * const &a, uint32_t count)
+void Voxelizer::populateGrid(const Atom * const &a, uint32_t count)
 {
+	std::ifstream e_cloud;
 
+  for(uint32_t i = 0; i < count ; ++i)
+	{
+		//get indecis for voxel placement, may be wrong at the current moment... truncation is not a problem
+		int index_x = (a[i].getX() + x_transform) / voxelSize;
+		int index_y = (a[i].getY() + y_transform) / voxelSize;
+		int index_z = (a[i].getZ() + z_transform) / voxelSize;
+
+		grid[index_x][index_y][index_z].addProton(); //later will replace with different means
+		grid[index_x][index_y][index_z].addNeutron(); //representing nucleus
+
+    //open electron cloud for each atom
+		std::string eCloudPath = "../ElectronClouds/" + a[i].getElemName() + ".txt";	//Parent/ElectronClouds/ELEMENT_SYMBOL.txt
+		e_cloud.open(eCloudPath.c_str());
+
+    if(e_cloud.good())
+		{
+			while(!e_cloud.eof())
+			{
+				double temp_x = 0.0, temp_y = 0.0, temp_z = 0.0; //hold electron points
+				char c; //take out commas from csv format
+
+				e_cloud >> temp_x;
+				e_cloud >> c;
+				e_cloud >> temp_y;  //take out points in relation to nucleus
+				e_cloud >> c;
+				e_cloud >> temp_z;
+
+				temp_x += (a[i].getX() + x_transform);
+				temp_y += (a[i].getY() + y_transform); //actual point of electron with transform
+				temp_z += (a[i].getZ() + z_transform);
+
+				//corresponding indecis or place against wall
+				index_x = (temp_x < 0)? 0: temp_x / voxelSize;
+				index_y = (temp_y < 0)? 0: temp_y / voxelSize;
+				index_z = (temp_z < 0)? 0: temp_z / voxelSize;
+
+				grid[index_x][index_y][index_z].addElectron();
+			}
+		}
+	}
 }
