@@ -1,7 +1,7 @@
 #ifndef VOXELIZER_H_NAP
 #define VOXELIZER_H_NAP
 
-#include "MolParse.h"
+#include "../MolParse/MolParse.h"
 #include "Voxel.h"
 #include <fstream>
 #include <vector>
