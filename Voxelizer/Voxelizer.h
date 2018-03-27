@@ -24,13 +24,15 @@ class Voxelizer
 	  Voxelizer(const MolParse &, uint32_t = 0.5); //automatically voxelizes the molecule with 0.5 voxelSize... RECOMMENDED
 
 	  void setVoxelSize(double v_size);
-	  void voxelize(const MolParse &);
+    void setMolecule(const MolParse &);
 
 	  uint32_t getDimensions();
 	  double getVoxelSize();
 	  double getXTranform();
 	  double getYTransform();
 	  double getZTransform();
+
+    void voxelize();
 };
 
 #endif // !VOXELIZER_H_NAP

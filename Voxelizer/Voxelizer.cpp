@@ -3,6 +3,7 @@
 //------------------------------------------------------------------------------
 //public
 
+//good
 Voxelizer::Voxelizer()
 {
 	numOfVoxels = 0;
@@ -10,6 +11,7 @@ Voxelizer::Voxelizer()
 	x_transform = y_transform = z_transform = 0.0;
 }
 
+//good
 Voxelizer::Voxelizer(const Voxelizer &v)
 {
 	numOfVoxels = v.numOfVoxels;
@@ -20,15 +22,16 @@ Voxelizer::Voxelizer(const Voxelizer &v)
 	molecule = v.molecule;
 }
 
+//good
 Voxelizer::Voxelizer(const MolParse &m, uint32_t v_size)
 {
 	voxelSize = v_size;
 	numOfVoxels = 0;
 	x_transform = y_transform = z_transform = 0.0;
 	molecule = m;
-	voxelize(molecule);
 }
 
+//in progress
 void Voxelizer::setVoxelSize(double v_size)
 {
 	//must repopulate grid based on resize
@@ -40,26 +43,44 @@ void Voxelizer::setVoxelSize(double v_size)
 		voxelSize = v_size;
 }
 
-void Voxelizer::voxelize(const MolParse &m)
+//done
+void Voxelizer::setMolecule(const MolParse &m) { molecule = m; }
+
+//in progress
+void Voxelizer::voxelize()
 {
-	molecule = m;
+	if(molecule.getAtomCount() == 0)
+		throw std::string("File contains 0 molecules.");
+
 	setGrid(molecule.getAtomList(), molecule.getAtomCount()); //set x,y,z transforms and numOfVoxels
-	populateGrid(molecule.getAtomList(), molecule.getAtomCount()); //this is where voxel proton, neutron and elctron counts will be incremented
+
+  if(numOfVoxels != 0)
+	{
+
+	}
+
+  populateGrid(molecule.getAtomList(), molecule.getAtomCount()); //this is where voxel proton, neutron and elctron counts will be incremented
 }
 
+//done
 uint32_t Voxelizer::getDimensions() { return numOfVoxels; }
 
+//done
 double Voxelizer::getVoxelSize() { return voxelSize; }
 
+//done
 double Voxelizer::getXTranform() { return x_transform; }
 
+//working
 double Voxelizer::getYTransform() { return y_transform; }
 
+//working
 double Voxelizer::getZTransform() { return z_transform; }
 
 //------------------------------------------------------------------------------
 //private
 
+//working
 void Voxelizer::setGrid(Atom * const &a, uint32_t count)
 {
 	std::ifstream e_cloud; //file handle to get points of electrons per atom
@@ -140,6 +161,7 @@ void Voxelizer::setGrid(Atom * const &a, uint32_t count)
 	numOfVoxels = uint32_t(maxDistance / voxelSize + 1); //add one to round up
 }
 
+//in progress
 void Voxelizer::populateGrid(Atom * const &a, uint32_t count)
 {
 
