@@ -29,15 +29,15 @@ Voxelizer::Voxelizer(const MolParse &m, uint32_t v_size)
 	voxelize(molecule);
 }
 
-void Voxelizer::setVoxelSize(double v_size) 
-{ 
+void Voxelizer::setVoxelSize(double v_size)
+{
 	//must repopulate grid based on resize
 	if (grid.size() != 0)
 	{
 
 	}
 	else
-		voxelSize = v_size; 
+		voxelSize = v_size;
 }
 
 void Voxelizer::voxelize(const MolParse &m)
@@ -72,7 +72,7 @@ void Voxelizer::setGrid(Atom * const &a, uint32_t count)
 		if (a[i].getX() < min_x)
 			min_x = a[i].getX();
 
-		if (a[i].getY() < min_y)		
+		if (a[i].getY() < min_y)
 			min_y = a[i].getY();
 
 		if (a[i].getZ() < min_z)
@@ -88,9 +88,9 @@ void Voxelizer::setGrid(Atom * const &a, uint32_t count)
 		if (a[i].getZ() > max_z)
 			max_z = a[i].getZ();
 
-		std::string eCloudPath = a[i].getElemName() + ".txt";	//ELEMENT_SYMBOL.txt
+		std::string eCloudPath = "../ElectronClouds/" + a[i].getElemName() + ".txt";	//Parent/ElectronClouds/ELEMENT_SYMBOL.txt
 		e_cloud.open(eCloudPath); //open file containing relative electron points
-		
+
 		//get min  and max x,y,z from electron cloud points
 		if (e_cloud.good())
 		{
@@ -112,7 +112,7 @@ void Voxelizer::setGrid(Atom * const &a, uint32_t count)
 					max_x = temp_x;
 
 				temp_y += a[i].getY(); //actual y coordinate of electron in relation to atom
-				if (temp_y < min_y)		
+				if (temp_y < min_y)
 					min_y = temp_y;
 				if (temp_y > max_y)
 					max_y = temp_y;
