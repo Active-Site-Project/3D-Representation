@@ -53,7 +53,7 @@ void MolParse::parseData() //parse data function definition
     molFile >> bondNum[i][0];
     bondNum[i][0]--; //subtract 1 so bond index is zero-indexed
     molFile >> bondNum[i][1];
-    bondNum[i][1]; //subtract 1 so bond index is zero-indexed
+    bondNum[i][1]--; //subtract 1 so bond index is zero-indexed
     molFile >> bondNum[i][2];
     getline(molFile, buffer, '\n');
   }
