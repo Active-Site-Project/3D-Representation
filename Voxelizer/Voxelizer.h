@@ -24,16 +24,18 @@ class Voxelizer
 	  Voxelizer(const Voxelizer &); //object will be voxelized if copying object is voxelized
 	  Voxelizer(const MolParse &, uint32_t = 0.5); //automatically starts the grid with 0.5 voxelSize... RECOMMENDED
 
-	  void setVoxelSize(double v_size);
-    void setMolecule(const MolParse &);
+	  void setVoxelSize(double v_size); //set dimensions for cubic voxel in angstrums
+    void setMolecule(const MolParse &); //set molparse object associated with voxel Grid
 
-	  uint32_t getDimensions();
-	  double getVoxelSize();
-	  double getXTranform();
-	  double getYTransform();
-	  double getZTransform();
+	  uint32_t getDimensions(); //returns dimensions of voxel Grid in number of voxels per dimemsion.. i.e numOfVoxels x numOfVoxels x numOfVoxels,.. max lenght width and height of grid
+	  double getVoxelSize(); //returns length of one voxel side in angstrums,.. note: voxel is a cube in space, volume = voxelSize^3
+	  double getXTranform(); //actual x of anything is (x - transform)
+	  double getYTransform(); //actual point of anything is (y - transform)
+	  double getZTransform(); //actual point of anything is (z - transform)
 
-    void voxelize();
+    void voxelize(); //allocate, populate grid with protons, neutrons and electrons... exporting to json is seperate because we may want to track other interactions within the voxels
+
+    
 };
 
 #endif // !VOXELIZER_H_NAP
