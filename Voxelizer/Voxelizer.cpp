@@ -227,6 +227,7 @@ void Voxelizer::populateGrid(const Atom * const &a, uint32_t count)
 	}
 }
 
+//in progress
 void Voxelizer::exportJSON()
 {
 	if(voxelized_flag == false)
