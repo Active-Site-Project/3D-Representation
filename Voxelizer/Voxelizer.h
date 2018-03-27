@@ -6,6 +6,8 @@
 #include <fstream>
 #include <vector>
 
+const std::string writeFilePath = "molecule.json";
+
 class Voxelizer
 {
   private:
@@ -35,7 +37,7 @@ class Voxelizer
 
     void voxelize(); //allocate, populate grid with protons, neutrons and electrons... exporting to json is seperate because we may want to track other interactions within the voxels
 
-    
+    void exportJSON(); //write all voxels to json file
 };
 
 #endif // !VOXELIZER_H_NAP

@@ -217,12 +217,42 @@ void Voxelizer::populateGrid(const Atom * const &a, uint32_t count)
 				temp_z += (a[i].getZ() + z_transform);
 
 				//corresponding indecis or place against wall
-				index_x = (temp_x < 0)? 0: temp_x / voxelSize;
-				index_y = (temp_y < 0)? 0: temp_y / voxelSize;
-				index_z = (temp_z < 0)? 0: temp_z / voxelSize;
+				index_x = temp_x / voxelSize;
+				index_y = temp_y / voxelSize;
+				index_z = temp_z / voxelSize;
 
 				grid[index_x][index_y][index_z].addElectron();
 			}
 		}
 	}
+}
+
+void Voxelizer::exportJSON()
+{
+	if(voxelized_flag == false)
+	  throw std::string("Must voxelize molecule first.");
+
+	std::ofstream out(writeFilePath);
+
+  //for each voxel we must write its properties
+  for(uint32_t i = 0; i < numOfVoxels; ++i)
+	{
+		for(uint32_t j = 0; j < numOfVoxels; ++j)
+		{
+			for(uint32_t k = 0; k < numOfVoxels; ++k)
+			{
+				out << "{\n\t"; //open new json object
+				out << "\"protons\": " << grid[i][j][k].getProtons() << ",\n\t"; //protons data member
+				out << "\"neutrons\": " << grid[i][j][k].getNeutrons() << ",\n\t";
+				out << "\"electrons\": " << grid[i][j][k].getElectrons() << "\n";
+				out << "}"; //close json object
+
+        //if not the last voxel
+				if(i != numOfVoxels - 1 || j != numOfVoxels - 1 || k != numOfVoxels - 1)
+				  out << ',';
+			}
+		}
+	}
+
+	out.close();
 }
