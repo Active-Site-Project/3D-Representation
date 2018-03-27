@@ -9,17 +9,19 @@ Voxelizer::Voxelizer()
 	numOfVoxels = 0;
 	voxelSize = 0.5;
 	x_transform = y_transform = z_transform = 0.0;
+	voxelized_flag = false;
 }
 
-//good
+//good, do not set transforms and other stuff until system for avoiding setUpGrid is thoroughly though out
 Voxelizer::Voxelizer(const Voxelizer &v)
 {
-	numOfVoxels = v.numOfVoxels;
+	numOfVoxels = 0;
 	voxelSize = v.voxelSize;
-	x_transform = v.x_transform;
-	y_transform = v.y_transform;
-	z_transform = v.z_transform;
+	x_transform = 0.0;
+	y_transform = 0.0;
+	z_transform = 0.0;
 	molecule = v.molecule;
+	voxelized_flag = false;
 }
 
 //good
@@ -29,6 +31,7 @@ Voxelizer::Voxelizer(const MolParse &m, uint32_t v_size)
 	numOfVoxels = 0;
 	x_transform = y_transform = z_transform = 0.0;
 	molecule = m;
+	voxelized_flag = false;
 }
 
 //in progress
@@ -45,6 +48,7 @@ void Voxelizer::setVoxelSize(double v_size)
     voxelSize = v_size;
 		numOfVoxels = 0;
 		x_transform = y_transform = z_transform = 0.0;
+		voxelized_flag = false;
 	}
 	else
 		voxelSize = v_size;
@@ -56,6 +60,9 @@ void Voxelizer::setMolecule(const MolParse &m) { molecule = m; }
 //in progress
 void Voxelizer::voxelize()
 {
+	if(voxelized_flag == true) //do nothing
+	  return;
+
 	if(molecule.getAtomCount() == 0)
 		throw std::string("File contains 0 atoms.\n");
 
@@ -63,10 +70,13 @@ void Voxelizer::voxelize()
 
   if(numOfVoxels != 0)
 	{
-
+    std::vector<Voxel> lv1(numOfVoxels);
+		std::vector<std::vector<Voxel>> lv2(numOfVoxels,lv1);
+	  grid.resize(numOfVoxels, lv2);
 	}
 
   populateGrid(molecule.getAtomList(), molecule.getAtomCount()); //this is where voxel proton, neutron and elctron counts will be incremented
+	voxelized_flag = true;
 }
 
 //done
