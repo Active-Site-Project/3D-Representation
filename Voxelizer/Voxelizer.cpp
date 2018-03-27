@@ -63,10 +63,6 @@ void Voxelizer::voxelize()
 	if(voxelized_flag == true) //do nothing
 	  return;
 
-  //will only execute if file contains 0 molecules or still user hasnt provided new file
-	if(molecule.getAtomCount() == 0)
-		throw std::string("File contains 0 atoms.\n");
-
 	setGrid(molecule.getAtomList(), molecule.getAtomCount()); //set x,y,z transforms and numOfVoxels
 
   if(numOfVoxels != 0)
@@ -101,6 +97,9 @@ double Voxelizer::getZTransform() { return z_transform; }
 //working
 void Voxelizer::setGrid(const Atom * const &a, uint32_t count)
 {
+	if(count == 0)
+		throw std::string("File contains 0 atoms.\n");
+
 	std::ifstream e_cloud; //file handle to get points of electrons per atom
 	double min_x, min_y, min_z, max_x, max_y, max_z; //keep track of smallest x and y in graph
 	min_x = min_y = min_z = max_x = max_y = max_z = 0.0;
