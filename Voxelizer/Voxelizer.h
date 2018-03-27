@@ -22,7 +22,7 @@ class Voxelizer
   public:
 	  Voxelizer(); //empty grid, will need to provide molParse object to voxelize later with Voxelize function
 	  Voxelizer(const Voxelizer &); //object will be voxelized if copying object is voxelized
-	  Voxelizer(const MolParse &, uint32_t = 0.5); //automatically voxelizes the molecule with 0.5 voxelSize... RECOMMENDED
+	  Voxelizer(const MolParse &, uint32_t = 0.5); //automatically starts the grid with 0.5 voxelSize... RECOMMENDED
 
 	  void setVoxelSize(double v_size);
     void setMolecule(const MolParse &);
