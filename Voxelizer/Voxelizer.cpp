@@ -34,10 +34,17 @@ Voxelizer::Voxelizer(const MolParse &m, uint32_t v_size)
 //in progress
 void Voxelizer::setVoxelSize(double v_size)
 {
-	//must repopulate grid based on resize
+  if(v_size <= 0)
+	  throw std::string("Voxel size must be greater than 0.\n");
+
+	//programmer must revoxelize after resizing, later will add ability to not need setUpGrid again
+	//only will need to repopulate
 	if (grid.size() != 0)
 	{
-
+		grid.clear();
+    voxelSize = v_size;
+		numOfVoxels = 0;
+		x_transform = y_transform = z_transform = 0.0;
 	}
 	else
 		voxelSize = v_size;
@@ -50,7 +57,7 @@ void Voxelizer::setMolecule(const MolParse &m) { molecule = m; }
 void Voxelizer::voxelize()
 {
 	if(molecule.getAtomCount() == 0)
-		throw std::string("File contains 0 molecules.");
+		throw std::string("File contains 0 atoms.\n");
 
 	setGrid(molecule.getAtomList(), molecule.getAtomCount()); //set x,y,z transforms and numOfVoxels
 
