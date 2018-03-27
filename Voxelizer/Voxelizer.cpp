@@ -63,6 +63,7 @@ void Voxelizer::voxelize()
 	if(voxelized_flag == true) //do nothing
 	  return;
 
+  //will only execute if file contains 0 molecules or still user hasnt provided new file
 	if(molecule.getAtomCount() == 0)
 		throw std::string("File contains 0 atoms.\n");
 
@@ -164,9 +165,10 @@ void Voxelizer::setGrid(const Atom * const &a, uint32_t count)
 		}
 	}
 
-	x_transform = -min_x;
-	y_transform = -min_y;
-	z_transform = -min_z;
+  //either there is or isnt a transform
+	x_transform = (min_x < 0)? -min_x: 0;
+	y_transform = (min_y < 0)? -min_y: 0;
+	z_transform = (min_z < 0)? -min_z: 0;
 
 	//number of voxels for cube will be max distance in any x rounded up, then divided by voxel size
 	double maxDistance = max_x - min_x;
