@@ -244,8 +244,8 @@ void Voxelizer::exportJSON()
 			{
 				out << "{\n\t"; //open new json object
 				out << "\"protons\": " << grid[i][j][k].getProtons() << ",\n\t"; //protons data member
-				out << "\"neutrons\": " << grid[i][j][k].getNeutrons() << ",\n\t";
-				out << "\"electrons\": " << grid[i][j][k].getElectrons() << "\n";
+				out << "\"neutrons\": " << grid[i][j][k].getNeutrons() << ",\n\t"; //neutrons data member
+				out << "\"electrons\": " << grid[i][j][k].getElectrons() << "\n"; //electrons data member
 				out << "}"; //close json object
 
         //if not the last voxel
