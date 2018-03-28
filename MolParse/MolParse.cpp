@@ -26,7 +26,7 @@ void MolParse::parseData() //parse data function definition
   std::string buffer, fileLocation;
   int fileNameLength = filename.length();
 
-  if (directory[directory.length()] != '/') //appends / to directory name if there is not one already given (so filename can easily be appended)
+  if (directory[directory.length()-1] != '/') //appends / to directory name if there is not one already given (so filename can easily be appended)
     directory = directory + "/";
   if (filename.substr(fileNameLength-4, fileNameLength) != ".mol") // there is probably a better way of doing this
     throw ("Invalid File Type!");
@@ -96,4 +96,19 @@ std::string MolParse::getDirectoryName() const //returns name of directory MolPa
 std::string MolParse::getFileName() const //returns name of file MolParse object is set to
 {
   return filename;
+}
+
+void MolParse::displayMoleculeInfo()
+{
+  if (atomCount == 0) //there has to be atoms in elementList or error is thrown
+    std::cout << "No atoms to display. Try parsing file first\n";
+  else
+  {
+    std::cout << directory << filename << "\n\n";
+    std::cout << "Atom Count: " << atomCount << '\n';
+    std::cout << "Bond Count: " << bondCount << "\n\n";
+    for (int i = 0; i < atomCount; i++)
+      std::cout << elementList[i].getX() << ' ' << elementList[i].getY() << ' ' << elementList[i].getZ() << ' ' << elementList[i].getElemName() << '\n';
+    std::cout << "\n\n";
+  }
 }
