@@ -38,7 +38,7 @@ Voxelizer::Voxelizer(const MolParse &m, uint32_t v_size)
 void Voxelizer::setVoxelSize(double v_size)
 {
   if(v_size <= 0)
-	  throw std::string("Voxel size must be greater than 0.\n");
+	  throw "Voxel size must be greater than 0.";
 
 	//programmer must revoxelize after resizing, later will add ability to not need setUpGrid again
 	//only will need to repopulate
@@ -98,7 +98,7 @@ double Voxelizer::getZTransform() { return z_transform; }
 void Voxelizer::setGrid(const Atom * const &a, uint32_t count)
 {
 	if(count == 0)
-		throw std::string("File contains 0 atoms.\n");
+		throw "File contains 0 atoms.";
 
 	std::ifstream e_cloud; //file handle to get points of electrons per atom
 	double min_x, min_y, min_z, max_x, max_y, max_z; //keep track of smallest x and y in graph
@@ -162,6 +162,10 @@ void Voxelizer::setGrid(const Atom * const &a, uint32_t count)
 					max_z = temp_z;
 			}
 		}
+		else
+		{
+		  throw "Could not access file with electron clouds.";
+		}
 	}
 
   //either there is or isnt a transform
@@ -223,6 +227,10 @@ void Voxelizer::populateGrid(const Atom * const &a, uint32_t count)
 				grid[index_x][index_y][index_z].addElectron();
 			}
 		}
+		else
+		{
+		  throw "Could not access file with electron clouds.";
+		}
 	}
 }
 
@@ -230,7 +238,7 @@ void Voxelizer::populateGrid(const Atom * const &a, uint32_t count)
 void Voxelizer::exportJSON()
 {
 	if(voxelized_flag == false)
-	  throw std::string("Must voxelize molecule first.");
+	  throw "Must voxelize molecule first.";
 
 	std::ofstream out(writeFilePath);
 
