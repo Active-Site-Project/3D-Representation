@@ -6,7 +6,7 @@
 #include <fstream>
 #include <vector>
 
-const std::string writeFilePath = "../molecule.json";
+const std::string writeFilePath = "../json/molecule.json"; //one back and into json folder
 
 class Voxelizer
 {
