@@ -23,7 +23,7 @@ int main(int argc, char** argv)
   }
   else
   {
-    throw "main.cpp - Too many command line arguments given to voxelizer program.";
+    throw "main - Too many command line arguments given to voxelizer program.";
   }
 
   //by this point we have what was given by the user and now need to verify data integrity
@@ -42,6 +42,11 @@ int main(int argc, char** argv)
     throw "main.cpp - No specified directory for molfile";
   }
 
+  //check integrity of getVoxelSize
+  if(voxelSize <= 0)
+  {
+    throw "main - Voxel size must be positve.";
+  }
   //std::cout << "Direcotry: " << directory << " Filename: " << fileName << std::endl;
   /*
   Voxelizer v;
