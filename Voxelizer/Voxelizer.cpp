@@ -126,8 +126,9 @@ void Voxelizer::setGrid(const Atom * const &a, uint32_t count)
 		if (a[i].getZ() > max_z)
 			max_z = a[i].getZ();
 
-		std::string eCloudPath = "../ElectronClouds/" + a[i].getElemName() + ".txt";	//Parent/ElectronClouds/ELEMENT_SYMBOL.txt
-		e_cloud.open(eCloudPath); //open file containing relative electron points
+		std::string eCloudPath = eCloudDirectory + a[i].getElemName() + ".txt";	//Parent/ElectronClouds/ELEMENT_SYMBOL.txt
+    //std::string eCloudPath = "ElectronClouds/C.txt";
+		e_cloud.open(eCloudPath.c_str()); //open file containing relative electron points
 
 		//get min  and max x,y,z from electron cloud points
 		if (e_cloud.good())
@@ -164,8 +165,10 @@ void Voxelizer::setGrid(const Atom * const &a, uint32_t count)
 		}
 		else
 		{
-		  throw "Could not access file with electron clouds.";
+			std::cout << eCloudPath << '\n';
+		  throw "Could not access electron cloud.";
 		}
+		e_cloud.close();
 	}
 
   //either there is or isnt a transform
@@ -199,7 +202,7 @@ void Voxelizer::populateGrid(const Atom * const &a, uint32_t count)
 		grid[index_x][index_y][index_z].addNeutron(); //representing nucleus
 
     //open electron cloud for each atom
-		std::string eCloudPath = "../ElectronClouds/" + a[i].getElemName() + ".txt";	//Parent/ElectronClouds/ELEMENT_SYMBOL.txt
+		std::string eCloudPath = eCloudDirectory + a[i].getElemName() + ".txt";	//Parent/ElectronClouds/ELEMENT_SYMBOL.txt
 		e_cloud.open(eCloudPath.c_str());
 
     if(e_cloud.good())
@@ -229,8 +232,10 @@ void Voxelizer::populateGrid(const Atom * const &a, uint32_t count)
 		}
 		else
 		{
-		  throw "Could not access file with electron clouds.";
+			std::cout << eCloudPath << '\n';
+		  throw "Could not access electron cloud.";
 		}
+		e_cloud.close();
 	}
 }
 
@@ -240,7 +245,7 @@ void Voxelizer::exportJSON()
 	if(voxelized_flag == false)
 	  throw "Must voxelize molecule first.";
 
-	std::ofstream out(writeFilePath);
+	std::ofstream out(writeFilePath.c_str()); //will overwrite old write file
 
   //for each voxel we must write its properties
   for(uint32_t i = 0; i < numOfVoxels; ++i)
