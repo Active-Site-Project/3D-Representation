@@ -1,5 +1,3 @@
-#include <iostream>
-#include <fstream>
 #include "MolParse.h"
 
 const int HLEN = 3; //constant for default header length, can also be set in program

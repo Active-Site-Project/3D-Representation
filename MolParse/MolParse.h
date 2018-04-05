@@ -1,7 +1,7 @@
 #ifndef MOL_PARSE_H
 #define MOL_PARSE_H
 
-#include <iostream>
+#include <fstream>
 #include <string>
 #include "Atom.h"
 

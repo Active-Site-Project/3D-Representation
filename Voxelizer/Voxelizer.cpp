@@ -262,7 +262,7 @@ void Voxelizer::exportJSON()
 
         //if not the last voxel
 				if(i != numOfVoxels - 1 || j != numOfVoxels - 1 || k != numOfVoxels - 1)
-				  out << ',';
+				  out << ",\n";
 			}
 		}
 	}
