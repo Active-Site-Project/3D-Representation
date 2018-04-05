@@ -127,6 +127,7 @@ void Voxelizer::setGrid(const Atom * const &a, uint32_t count)
 			max_z = a[i].getZ();
 
 		std::string eCloudPath = eCloudDirectory + a[i].getElemName() + ".txt";	//Parent/ElectronClouds/ELEMENT_SYMBOL.txt
+    //std::string eCloudPath = "ElectronClouds/C.txt";
 		e_cloud.open(eCloudPath.c_str()); //open file containing relative electron points
 
 		//get min  and max x,y,z from electron cloud points
@@ -167,6 +168,7 @@ void Voxelizer::setGrid(const Atom * const &a, uint32_t count)
 			std::cout << eCloudPath << '\n';
 		  throw "Could not access electron cloud.";
 		}
+		e_cloud.close();
 	}
 
   //either there is or isnt a transform
@@ -233,6 +235,7 @@ void Voxelizer::populateGrid(const Atom * const &a, uint32_t count)
 			std::cout << eCloudPath << '\n';
 		  throw "Could not access electron cloud.";
 		}
+		e_cloud.close();
 	}
 }
 
