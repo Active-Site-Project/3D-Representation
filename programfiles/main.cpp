@@ -23,7 +23,8 @@ int main(int argc, char** argv)
   }
   else
   {
-    throw "main - Too many command line arguments given to voxelizer program.";
+    std::cout << "error in main - Too many command line arguments given to voxelizer program.\n";
+    return 0;
   }
 
   //by this point we have what was given by the user and now need to verify data integrity
@@ -34,19 +35,46 @@ int main(int argc, char** argv)
   //check if a directory is specified
   if(posOfLastSlash != std::string::npos)
   {
-    directory = molFile.substr(0, posOfLastSlash);
+    directory = molFile.substr(0, posOfLastSlash+1);
     fileName = molFile.substr(posOfLastSlash+1, molFile.size() - posOfLastSlash);
+    //std::cout << "Direcotry: " << directory << " Filename: " << fileName << std::endl;
   }
   else
   {
-    throw "main.cpp - No specified directory for molfile";
+    std::cout << "error in main - No specified directory for molfile" << '\n';
+    return 0;
   }
 
   //check integrity of getVoxelSize
   if(voxelSize <= 0)
   {
-    throw "main - Voxel size must be positve.";
+    std::cout << "error in main - Voxel size must be positve.\n";
+    return 0; //later will be error codes associated with error
   }
+
+  //at this point we should have some positive value for voxelSize and a directory for the molFile
+  MolParse m(directory, fileName);
+  try{
+    m.parseData(); //this will throw error if cannot access molFile
+  }
+  catch(const char *e){
+    std::cout << e << '\n';
+    return 0;
+  }
+
+  //Now we have a molParse object with validated molFile and we have a validated voxel size, next we need a Voxelizer
+  Voxelizer v(m, voxelSize);
+
+  try{
+    v.voxelize(); //here is where all the elements in the molFile and their respective electron clouds update the voxels, calls setUpGrid and populateGrid
+  }
+  catch(const char *e){
+    std::cout << e << '\n';
+    return 0;
+  }
+
+  v.exportJSON();
+
   //std::cout << "Direcotry: " << directory << " Filename: " << fileName << std::endl;
   /*
   Voxelizer v;

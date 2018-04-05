@@ -26,6 +26,8 @@ void MolParse::parseData() //parse data function definition
 
   if (directory[directory.length()-1] != '/') //appends / to directory name if there is not one already given (so filename can easily be appended)
     directory = directory + "/";
+  if(fileNameLength  < 5) //in this case, we either have only .mol or anthing other than a filename.mol which has a min of 5 chars. ex. a.mol
+    throw ("Invalid File Type!");
   if (filename.substr(fileNameLength-4, fileNameLength) != ".mol") // there is probably a better way of doing this
     throw ("Invalid File Type!");
   fileLocation = directory + filename; //name of mol file location on computer to open

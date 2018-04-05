@@ -25,8 +25,10 @@ Voxelizer::Voxelizer(const Voxelizer &v)
 }
 
 //good
-Voxelizer::Voxelizer(const MolParse &m, uint32_t v_size)
+Voxelizer::Voxelizer(const MolParse &m, double v_size)
 {
+	if(v_size <= 0)
+	  throw "Voxelizer - Voxel size must be positve.";
 	voxelSize = v_size;
 	numOfVoxels = 0;
 	x_transform = y_transform = z_transform = 0.0;

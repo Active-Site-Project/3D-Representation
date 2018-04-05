@@ -6,7 +6,7 @@
 #include <fstream>
 #include <vector>
 
-const std::string writeFilePath = "molecule.json"; //one back and into json folder
+const std::string writeFilePath = "molecule.json"; //will change later for user to specify
 const std::string eCloudDirectory = "ElectronClouds/";
 
 class Voxelizer
@@ -25,7 +25,7 @@ class Voxelizer
   public:
 	  Voxelizer(); //empty grid, will need to provide molParse object to voxelize later with Voxelize function
 	  Voxelizer(const Voxelizer &); //object will be voxelized if copying object is voxelized
-	  Voxelizer(const MolParse &, uint32_t = 0.5); //automatically starts the grid with 0.5 voxelSize... RECOMMENDED
+	  Voxelizer(const MolParse &, double = 0.5); //automatically starts the grid with 0.5 voxelSize... RECOMMENDED
 
 	  void setVoxelSize(double v_size); //set dimensions for cubic voxel in angstrums
     void setMolecule(const MolParse &); //set molparse object associated with voxel Grid
