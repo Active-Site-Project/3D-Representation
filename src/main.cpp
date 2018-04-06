@@ -1,4 +1,4 @@
-#include "../Voxelizer/Voxelizer.h"
+#include "Voxelizer.h"
 
 //takes in a molFile path with filename and a voxelSize in angstrums, Voxelizes it and outputs to json
 int main(int argc, char** argv)
@@ -75,43 +75,5 @@ int main(int argc, char** argv)
 
   v.exportJSON();
 
-  //std::cout << "Direcotry: " << directory << " Filename: " << fileName << std::endl;
-  /*
-  Voxelizer v;
-
-  // directories are based upon where the compiler is being called from
-  MolParse m("MolParse/mol");
-  m.parseData();
-  m.displayMoleculeInfo();
-
-
-  v.setMolecule(m);
-
-  try{
-    v.voxelize();
-  }
-  catch(const char *e){
-    std::cout << e << '\n';
-  }
-
-  std::cout << "Voxel grid dimensions: " << v.getDimensions() << '\n';
-
-  try{
-    v.exportJSON();
-  }
-  catch(const char *e){
-    std::cout << e << '\n';
-  }
-
-  std::string firstLine;
-  std::string path = "ElectronClouds/C.txt";
-  std::ifstream in;
-  in.open(path.c_str());
-  if(in.good())
-  {
-    in >> firstLine;
-    std::cout << firstLine << std::endl;
-  }
-
-  return 0;*/
+  return 0;
 }
