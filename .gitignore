@@ -38,3 +38,5 @@
 ehthumbs.db
 Thumbs.db
 *.json
+
+programfiles #ignore program files directory
