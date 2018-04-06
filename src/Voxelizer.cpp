@@ -249,6 +249,10 @@ void Voxelizer::exportJSON()
 
 	std::ofstream out(writeFilePath.c_str()); //will overwrite old write file
 
+  //output the dimensions of the VoxelGrid as well as the size of each voxel
+	out << "VoxelGrid Dimensions: " << numOfVoxels << '\n';
+	out << "Voxel size: " << voxelSize << "\n\n"; //blank space between dimensions and voxels themselves
+
   //for each voxel we must write its properties
   for(uint32_t i = 0; i < numOfVoxels; ++i)
 	{
@@ -262,7 +266,7 @@ void Voxelizer::exportJSON()
 				out << "\"electrons\": " << grid[i][j][k].getElectrons() << "\n"; //electrons data member
 				out << "}"; //close json object
 
-        //if not the last voxel
+        //if not the last voxel add a comment and newline character
 				if(i != numOfVoxels - 1 || j != numOfVoxels - 1 || k != numOfVoxels - 1)
 				  out << ",\n";
 			}
