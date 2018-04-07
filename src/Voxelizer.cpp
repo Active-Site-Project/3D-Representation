@@ -179,28 +179,17 @@ void Voxelizer::setGrid(const Atom * const &a, uint32_t count)
 	y_transform = (min_y < 0)? -min_y: 0;
 	z_transform = (min_z < 0)? -min_z: 0;
 
-<<<<<<< HEAD
-	//number of voxels for cube will be max distance in any x rounded up, then divided by voxel size
-	double maxDistance = max_x - min_x;
-	if (maxDistance < (max_y - min_y))  //note that max distance affecting voxelsize does not necessarily mean we actually need that many voxels
-		maxDistance = max_y - min_y;      //we are actually over allocating here for simplicity
-	if (maxDistance < (max_z - min_z))
-		maxDistance = max_z - min_z;
-
-	numOfVoxels = uint32_t(maxDistance / voxelSize + 1); //add one to round up
-=======
   if (!numOfVoxels)
   {
     //number of voxels for cube will be max distance in any x rounded up, then divided by voxel size
   	double maxDistance = max_x - min_x;
-  	if (maxDistance < (max_y - min_y))
-  		maxDistance = max_y - min_y;
-  	if (maxDistance < (max_z - min_z))
+  	if (maxDistance < (max_y - min_y))  //note that max distance affecting voxelsize does not necessarily mean we actually need that many voxels
+  		maxDistance = max_y - min_y;      //we are actually over allocating here for simplicity
+  	if (maxDistance < (max_z - min_z))  //use distance formula later
   		maxDistance = max_z - min_z;
 
     numOfVoxels = uint32_t(maxDistance / voxelSize + 1); //add one to round up
   }
->>>>>>> d1933ab98c4664d7648e2db12618277252f84802
 }
 
 //in progress
