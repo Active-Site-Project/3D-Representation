@@ -3,16 +3,15 @@
 //------------------------------------------------------------------------------
 //public
 
-//good
 Voxelizer::Voxelizer()
 {
 	numOfVoxels = 0;
 	voxelSize = 0.5;
 	x_transform = y_transform = z_transform = 0.0;
-	voxelized_flag = false;
+	voxelized_flag = site_active = false;
 }
 
-//good, do not set transforms and other stuff until system for avoiding setUpGrid is thoroughly though out
+//note-to-self: do not set transforms and other stuff until system for avoiding setUpGrid is thoroughly though out
 Voxelizer::Voxelizer(const Voxelizer &v)
 {
 	numOfVoxels = 0;
@@ -21,22 +20,20 @@ Voxelizer::Voxelizer(const Voxelizer &v)
 	y_transform = 0.0;
 	z_transform = 0.0;
 	molecule = v.molecule;
-	voxelized_flag = false;
+	voxelized_flag = site_active = false;
 }
 
-//good
+//for now can only copy an active site from a molFile, not from an existing active site
 Voxelizer::Voxelizer(const MolParse &m, double v_size, uint32_t gridDimensions)
 {
-	if(v_size <= 0)
-	  throw "Voxelizer - Voxel size must be positve.";
 	voxelSize = v_size;
 	numOfVoxels = gridDimensions;
 	x_transform = y_transform = z_transform = 0.0;
 	molecule = m;
-	voxelized_flag = false;
+	voxelized_flag = site_active = false;
 }
 
-//in progress
+//set Voxel dimensions
 void Voxelizer::setVoxelSize(double v_size)
 {
   if(v_size <= 0)
@@ -56,44 +53,133 @@ void Voxelizer::setVoxelSize(double v_size)
 		voxelSize = v_size;
 }
 
-//done
+//set MolParse object associated
 void Voxelizer::setMolecule(const MolParse &m) { molecule = m; }
 
-//in progress
+//Voxelizes a molFile into a new active site, or adds it to an existing active site
 void Voxelizer::voxelize()
 {
 	if(voxelized_flag == true) //do nothing
 	  return;
 
+	if(voxelSize <= 0)
+	  throw "Voxel size must be positve.";
+
 	setGrid(molecule.getAtomList(), molecule.getAtomCount()); //set x,y,z transforms and numOfVoxels
 
   if(numOfVoxels != 0 && grid.size() == 0)
-	{
-    std::vector<Voxel> lv1(numOfVoxels);
-		std::vector<std::vector<Voxel>> lv2(numOfVoxels,lv1);
-	  grid.resize(numOfVoxels, lv2);
-	}
+    resizeGrid(); //allocate cube with dimensions numOfVoxels
 
   populateGrid(molecule.getAtomList(), molecule.getAtomCount()); //this is where voxel proton, neutron and elctron counts will be incremented
-	voxelized_flag = true;
+	voxelized_flag = site_active = true;
 }
 
-//done
 uint32_t Voxelizer::getDimensions() { return numOfVoxels; }
 
-//done
 double Voxelizer::getVoxelSize() { return voxelSize; }
 
-//done
 double Voxelizer::getXTranform() { return x_transform; }
 
-//working
 double Voxelizer::getYTransform() { return y_transform; }
 
-//working
 double Voxelizer::getZTransform() { return z_transform; }
 
+//sets numOfVoxels
 void Voxelizer::setDimensions(uint32_t gridDimensions) { numOfVoxels = gridDimensions; }
+
+//exports to a json style format
+void Voxelizer::exportJSON()
+{
+	if(voxelized_flag == false)
+	  throw "Must voxelize molecule first.";
+
+	std::ofstream out(writeFilePath.c_str()); //will overwrite old write file
+
+  //output the dimensions of the VoxelGrid as well as the size of each voxel
+	out << "VoxelGrid Dimensions: " << numOfVoxels << '\n';
+	out << "Voxel size: " << voxelSize << "\n\n"; //blank space between dimensions and voxels themselves
+
+  //for each voxel we must write its properties
+  for(uint32_t i = 0; i < numOfVoxels; ++i)
+	{
+		for(uint32_t j = 0; j < numOfVoxels; ++j)
+		{
+			for(uint32_t k = 0; k < numOfVoxels; ++k)
+			{
+				out << "{\n\t"; //open new json object
+				out << "\"protons\": " << grid[i][j][k].getProtons() << ",\n\t"; //protons data member
+				out << "\"neutrons\": " << grid[i][j][k].getNeutrons() << ",\n\t"; //neutrons data member
+				out << "\"electrons\": " << grid[i][j][k].getElectrons() << "\n"; //electrons data member
+				out << "}"; //close json object
+
+        //if not the last voxel add a comment and newline character
+				if(i != numOfVoxels - 1 || j != numOfVoxels - 1 || k != numOfVoxels - 1)
+				  out << ",\n";
+			}
+		}
+	}
+
+	out.close();
+}
+
+//takes in an acitve site, sets the transforms, number of voxels, and voxelsize... can only be called if cuurent Voxelizer object is not voxelized
+void Voxelizer::readActiveSite(std::string activeSite)
+{
+  if(voxelized_flag != false) //if not voxelized, then grid.size() will be 0
+	  throw "Cannot add an active-site to an already voxelized molecule. \nRead Active site first, and then voxelize with the second smaller molecule.";
+
+  std::ifstream in(activeSite.c_str());
+	std::string s; //use to exctract data
+
+  if(in.good()) {
+		//read in dimensions
+		in >> s; in >> s; //get rid of "VoxelGrid Dimensions: "
+		in >> numOfVoxels;
+		in >> s; in >> s; //get rid of "Voxel size: "
+		in >> voxelSize;
+		in >> s; //get rid of blank line
+
+		resizeGrid(); //allocate cube with dimensions numOfVoxels
+
+		//populate grid with voxels in file
+		uint64_t tempParticles;
+		for(uint32_t i = 0; i < numOfVoxels; ++i) {
+			for(uint32_t j = 0; j < numOfVoxels; ++j) {
+			  for(uint32_t k = 0; k < numOfVoxels; ++k) {
+					in >> s; in >> s; in >> s;//get rid of '{' , '\t' , and "protons: "
+					in >> tempParticles; //get number of protons
+					if(tempParticles > 0)
+					 	grid[i][j][k].addProtons(tempParticles); //adds protons to grid if there are any
+
+					in >> s; in >> s; in >> s;//get rid of ',' , '\t' , and "neutrons: "
+					in >> tempParticles; //get number of neutrons
+					if(tempParticles > 0)
+					 	grid[i][j][k].addNeutrons(tempParticles); //adds neutrons to grid if there are any
+
+					in >> s; in >> s; in >> s;//get rid of ',' , '\t' , and "electrons: "
+					in >> tempParticles; //get number of electrons
+					if(tempParticles > 0)
+						grid[i][j][k].addElectrons(tempParticles); //adds electrons to grid if there are any
+
+					in >> s; in >>s; //get rid of "}," or only "}" if the last one
+				}
+			}
+		}
+
+	}
+
+	in.close();
+	site_active = true;
+}
+
+
+
+
+
+
+
+
+
 //------------------------------------------------------------------------------
 //private
 
@@ -175,9 +261,9 @@ void Voxelizer::setGrid(const Atom * const &a, uint32_t count)
 	}
 
   //either there is or isnt a transform
-	x_transform = (min_x < -x_transform)? -min_x: x_transform; //transforms will always be 0 or positive values
-	y_transform = (min_y < -y_transform)? -min_y: y_transform; //representing the opposite of the most negative value
-	z_transform = (min_z < -z_transform)? -min_z: z_transform;
+	x_transform = (min_x < 0)? -min_x: 0; //transforms will always be 0 or positive values
+	y_transform = (min_y < 0)? -min_y: 0; //representing the opposite of the most negative value
+	z_transform = (min_z < 0)? -min_z: 0;
 
   if (!numOfVoxels)
   {
@@ -249,45 +335,9 @@ void Voxelizer::populateGrid(const Atom * const &a, uint32_t count)
 	}
 }
 
-//in progress
-void Voxelizer::exportJSON()
+void Voxelizer::resizeGrid()
 {
-	if(voxelized_flag == false)
-	  throw "Must voxelize molecule first.";
-
-	std::ofstream out(writeFilePath.c_str()); //will overwrite old write file
-
-  //output the dimensions of the VoxelGrid as well as the size of each voxel
-	out << "VoxelGrid Dimensions: " << numOfVoxels << '\n';
-	out << "Voxel size: " << voxelSize << "\n"; //blank space between dimensions and voxels themselves
-  out << "X transform: " << x_transform << "\n";
-  out << "Y transform: " << y_transform << "\n";
-	out << "Z transform: " << z_transform << "\n\n";
-
-  //for each voxel we must write its properties
-  for(uint32_t i = 0; i < numOfVoxels; ++i)
-	{
-		for(uint32_t j = 0; j < numOfVoxels; ++j)
-		{
-			for(uint32_t k = 0; k < numOfVoxels; ++k)
-			{
-				out << "{\n\t"; //open new json object
-				out << "\"protons\": " << grid[i][j][k].getProtons() << ",\n\t"; //protons data member
-				out << "\"neutrons\": " << grid[i][j][k].getNeutrons() << ",\n\t"; //neutrons data member
-				out << "\"electrons\": " << grid[i][j][k].getElectrons() << "\n"; //electrons data member
-				out << "}"; //close json object
-
-        //if not the last voxel add a comment and newline character
-				if(i != numOfVoxels - 1 || j != numOfVoxels - 1 || k != numOfVoxels - 1)
-				  out << ",\n";
-			}
-		}
-	}
-
-	out.close();
-}
-
-void Voxelizer::readJSON()
-{
-
+	std::vector<Voxel> lv1(numOfVoxels);
+	std::vector<std::vector<Voxel>> lv2(numOfVoxels,lv1);
+	grid.resize(numOfVoxels, lv2);
 }

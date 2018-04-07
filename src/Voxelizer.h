@@ -17,10 +17,11 @@ class Voxelizer
 	  uint32_t numOfVoxels; //grid dimensions determined by numOfVoxels, i.e numOfVoxels length, width, height in grid since cube
 	  double voxelSize;   //will be length width and height of each voxel
 	  double x_transform, y_transform, z_transform; //transform entire molecule onto pos xy plane, 1st octet
-    bool voxelized_flag;
+    bool voxelized_flag, site_active; //use to know if voxelized and site active, site will be active without being voxelized, when reading in an existing active_site
     void setDimensions(uint32_t);
 	  void setGrid(const Atom * const &, uint32_t); //finds transform to move all points into octet 1 (x,y,z > 0), and cube dimensions in numOfVoxels
 	  void populateGrid(const Atom * const &, uint32_t); //will go through and populate protons, neutrons and electrons
+    void resizeGrid(); //helper function to resize grid when needed
 
   public:
 	  Voxelizer(); //empty grid, will need to provide molParse object to voxelize later with Voxelize function
@@ -39,7 +40,7 @@ class Voxelizer
     void voxelize(); //allocate, populate grid with protons, neutrons and electrons... exporting to json is seperate because we may want to track other interactions within the voxels
 
     void exportJSON(); //write all voxels to json file
-    void readJSON(); //reads in an active-site json and populates an EXISTING grid as such
+    void readActiveSite(std::string); //reads in an active-site json and populates a NEW grid
 };
 
 #endif // !VOXELIZER_H_NAP
