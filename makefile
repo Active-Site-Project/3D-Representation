@@ -1,4 +1,4 @@
-Voxelizer: programfiles programfiles/main.o
+Voxelizer.exe: programfiles programfiles/main.o
 	g++ -o Voxelizer.exe programfiles/main.o programfiles/Voxelizer.o programfiles/Voxel.o programfiles/MolParse.o programfiles/Atom.o
 programfiles/main.o: src/main.cpp programfiles/Voxelizer.o programfiles/MolParse.o
 	g++ -std=c++0x -o programfiles/main.o src/main.cpp -c -Wall -pedantic -g

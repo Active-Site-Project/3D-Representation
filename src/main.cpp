@@ -1,41 +1,54 @@
 #include "Voxelizer.h"
 
+void createActiveSite(const std::string path,const double voxelSize);
+
 //takes in a molFile path with filename and a voxelSize in angstrums, Voxelizes it and outputs to json
 int main(int argc, char** argv)
 {
-  std::string molFile;
-  double voxelSize;
+  std::string path;
+  double voxelSize = 0.0;
+  char addingToExisting = 0;
 
   if(argc == 1) //user is running program without passing command line argument
   {
-    char addingToExisting = 0;
+    //find out if we are adding to an active-site or a new active-site
     do
     {
       std::cout << "Are you adding to an existing Active-Site? (y or n)\n";
       std::cin >> addingToExisting;
     } while(addingToExisting != 'y' && addingToExisting != 'Y' &&  //continue looping while it doesnt equal any of the following
-            addingToExisting != 'n' && addingToExisting != 'N')
+            addingToExisting != 'n' && addingToExisting != 'N');
 
     //existing active site
     if(addingToExisting == 'y' || addingToExisting == 'Y')
     {
-
+      std::cout << "Specify the path and file name to an active-site json file you would like to add to.\n";
+      std::cin >> path;
     }
     else //new active site
     {
       //get the molFile path with filename from user
       std::cout << "Specify the path and file name to a molfile you would like to represent.\n";
-      std::cin >> molFile;
+      std::cin >> path;
 
       //get the voxel size from user
       std::cout << "Specify the Voxel Size in angstrums.\n";
       std::cin >> voxelSize;
     }
   }
-  else if(argc == 3) //user is running with command line arguments
+  else if(argc == 3) //user is running with command line arguments, need to get file extension and check if json or mol
   {
-    molFile = argv[1];
-    voxelSize = std::atof(argv[2]);
+    path = argv[1];
+
+    if(path.find(".json") != std::string::npos) //.json found
+    {
+      addingToExisting = 'y'; //adding to an existing molfile
+    }
+    else if(path.find(".mol") != std::string::npos) //.mol found
+    {
+      addingToExisting = 'n'; //adding to an existing molfile
+      voxelSize = std::atof(argv[2]);
+    }
   }
   else
   {
@@ -43,29 +56,44 @@ int main(int argc, char** argv)
     return 0;
   }
 
+  //new active-site
+  if(addingToExisting == 'n' || addingToExisting == 'N')
+  {
+    createActiveSite(path, voxelSize);
+  }
+  else //adding to existing, and we are sure addingToExisting == either y || n or their respective capitals
+  {
+
+  }
+
+  return 0;
+}
+
+void createActiveSite(const std::string path, const double voxelSize)
+{
   //by this point we have what was given by the user and now need to verify data integrity
   //get directory and filename form the user
-  std::size_t posOfLastSlash = molFile.find_last_of('/');
+  std::size_t posOfLastSlash = path.find_last_of('/');
   std::string directory, fileName;
 
   //check if a directory is specified
   if(posOfLastSlash != std::string::npos)
   {
-    directory = molFile.substr(0, posOfLastSlash+1);
-    fileName = molFile.substr(posOfLastSlash+1, molFile.size() - posOfLastSlash);
+    directory = path.substr(0, posOfLastSlash+1);
+    fileName = path.substr(posOfLastSlash+1, path.size() - posOfLastSlash);
     //std::cout << "Direcotry: " << directory << " Filename: " << fileName << std::endl;
   }
   else
   {
     std::cout << "error in main - No specified directory for molfile" << '\n';
-    return 0;
+    return;
   }
 
   //check integrity of getVoxelSize
   if(voxelSize <= 0)
   {
     std::cout << "error in main - Voxel size must be positve.\n";
-    return 0; //later will be error codes associated with error
+    return; //later will be error codes associated with error
   }
 
   //at this point we should have some positive value for voxelSize and a directory for the molFile
@@ -75,7 +103,7 @@ int main(int argc, char** argv)
   }
   catch(const char *e){
     std::cout << e << '\n';
-    return 0;
+    return;
   }
 
   //Now we have a molParse object with validated molFile and we have a validated voxel size, next we need a Voxelizer
@@ -86,10 +114,8 @@ int main(int argc, char** argv)
   }
   catch(const char *e){
     std::cout << e << '\n';
-    return 0;
+    return;
   }
 
   v.exportJSON();
-
-  return 0;
 }
