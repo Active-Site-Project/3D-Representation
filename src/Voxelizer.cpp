@@ -200,9 +200,9 @@ void Voxelizer::populateGrid(const Atom * const &a, uint32_t count)
   for(uint32_t i = 0; i < count ; ++i)
 	{
 		//get indecis for voxel placement, may be wrong at the current moment... truncation is not a problem
-		int index_x = (a[i].getX() + x_transform) / voxelSize;
-		int index_y = (a[i].getY() + y_transform) / voxelSize;
-		int index_z = (a[i].getZ() + z_transform) / voxelSize;
+		uint32_t index_x = (a[i].getX() + x_transform) / voxelSize;
+		uint32_t index_y = (a[i].getY() + y_transform) / voxelSize;
+		uint32_t index_z = (a[i].getZ() + z_transform) / voxelSize;
 
     if (index_x >= numOfVoxels || index_y >= numOfVoxels || index_z >= numOfVoxels)
       throw("populateGridError: Atom index falls outside of grid space specified by the user.");
@@ -230,7 +230,7 @@ void Voxelizer::populateGrid(const Atom * const &a, uint32_t count)
 				temp_y += (a[i].getY() + y_transform); //actual point of electron with transform
 				temp_z += (a[i].getZ() + z_transform);
 
-				//corresponding indecis or place against wall
+				//corresponding indicies or place against wall
 				index_x = temp_x / voxelSize;
 				index_y = temp_y / voxelSize;
 				index_z = temp_z / voxelSize;
