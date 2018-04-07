@@ -8,13 +8,29 @@ int main(int argc, char** argv)
 
   if(argc == 1) //user is running program without passing command line argument
   {
-    //get the molFile path with filename from user
-    std::cout << "Specify the path and file name to a molfile you would like to represent.\n";
-    std::cin >> molFile;
+    char addingToExisting = 0;
+    do
+    {
+      std::cout << "Are you adding to an existing Active-Site? (y or n)\n";
+      std::cin >> addingToExisting;
+    } while(addingToExisting != 'y' && addingToExisting != 'Y' &&  //continue looping while it doesnt equal any of the following
+            addingToExisting != 'n' && addingToExisting != 'N')
 
-    //get the voxel size from user
-    std::cout << "Specify the Voxel Size in angstrums.\n";
-    std::cin >> voxelSize;
+    //existing active site
+    if(addingToExisting == 'y' || addingToExisting == 'Y')
+    {
+
+    }
+    else //new active site
+    {
+      //get the molFile path with filename from user
+      std::cout << "Specify the path and file name to a molfile you would like to represent.\n";
+      std::cin >> molFile;
+
+      //get the voxel size from user
+      std::cout << "Specify the Voxel Size in angstrums.\n";
+      std::cin >> voxelSize;
+    }
   }
   else if(argc == 3) //user is running with command line arguments
   {
