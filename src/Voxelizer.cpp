@@ -95,6 +95,9 @@ void Voxelizer::exportJSON()
 
 	std::ofstream out(writeFilePath.c_str()); //will overwrite old write file
 
+  //output MoleculeGrid-V1.0 so that when reading we can tell that this is a MoleculeGrid-V1.0, json style, file type.
+  out << "MoleculeGrid-V1.0\n";
+
   //output the dimensions of the VoxelGrid as well as the size of each voxel
 	out << "VoxelGrid Dimensions: " << numOfVoxels << '\n';
 	out << "Voxel size: " << voxelSize << "\n\n"; //blank space between dimensions and voxels themselves
@@ -132,12 +135,15 @@ void Voxelizer::readActiveSite(std::string activeSite)
 	std::string s; //use to exctract data
 
   if(in.good()) {
+		in >> s; //read in fileType, MoleculeGrid V1.0, .mg in the future possibly
+		if(s != "MoleculeGrid-V1.0")
+			throw "Invalid Active Site.";
+
 		//read in dimensions
 		in >> s; in >> s; //get rid of "VoxelGrid Dimensions: "
 		in >> numOfVoxels;
 		in >> s; in >> s; //get rid of "Voxel size: "
 		in >> voxelSize;
-		in >> s; //get rid of blank line
 
 		resizeGrid(); //allocate cube with dimensions numOfVoxels
 
@@ -146,26 +152,29 @@ void Voxelizer::readActiveSite(std::string activeSite)
 		for(uint32_t i = 0; i < numOfVoxels; ++i) {
 			for(uint32_t j = 0; j < numOfVoxels; ++j) {
 			  for(uint32_t k = 0; k < numOfVoxels; ++k) {
-					in >> s; in >> s; in >> s;//get rid of '{' , '\t' , and "protons: "
+					in >> s; in >> s;//get rid of '{' , '\t' , and "protons: "
 					in >> tempParticles; //get number of protons
 					if(tempParticles > 0)
 					 	grid[i][j][k].addProtons(tempParticles); //adds protons to grid if there are any
 
-					in >> s; in >> s; in >> s;//get rid of ',' , '\t' , and "neutrons: "
+					in >> s; in >> s;//get rid of ',' , '\t' , and "neutrons: "
 					in >> tempParticles; //get number of neutrons
 					if(tempParticles > 0)
 					 	grid[i][j][k].addNeutrons(tempParticles); //adds neutrons to grid if there are any
 
-					in >> s; in >> s; in >> s;//get rid of ',' , '\t' , and "electrons: "
+					in >> s; in >> s;//get rid of ',' , '\t' , and "electrons: "
 					in >> tempParticles; //get number of electrons
 					if(tempParticles > 0)
 						grid[i][j][k].addElectrons(tempParticles); //adds electrons to grid if there are any
 
-					in >> s; in >>s; //get rid of "}," or only "}" if the last one
+					in >> s;//get rid of "}," or only "}" if the last one
 				}
 			}
 		}
 
+	}
+	else {
+		throw "Could not open active site json file.";
 	}
 
 	in.close();

@@ -89,12 +89,11 @@ void createActiveSite(const std::string path, const double voxelSize)
   //get directory and filename form the user
   std::size_t posOfLastSlash = path.find_last_of('/');
   std::string directory, fileName;
+  Voxelizer v;
 
-  //check if a directory is specified
-  if(posOfLastSlash != std::string::npos) {
+  if(posOfLastSlash != std::string::npos) {  //check if a directory is specified, later might not need
     directory = path.substr(0, posOfLastSlash+1);
     fileName = path.substr(posOfLastSlash+1, path.size() - posOfLastSlash);
-    //std::cout << "Direcotry: " << directory << " Filename: " << fileName << std::endl;
   }
   else {
     std::cout << "error in main - No specified directory for molfile" << '\n';
@@ -103,16 +102,12 @@ void createActiveSite(const std::string path, const double voxelSize)
 
   //at this point we should have some positive value for voxelSize and a directory for the molFile
   MolParse m(directory, fileName);
-  try{ m.parseData(); } //this will throw error if cannot access molFile
-  catch(const char *e) {
-    std::cout << e << '\n';
-    return;
+  try{
+    m.parseData();  //this will throw error if cannot access molFile
+    v.setMolecule(m); //at this point we have valid molFile data if no errors thrown
+    v.setVoxelSize(voxelSize); //will throw error if <= 0
+    v.voxelize();
   }
-
-  //Now we have a molParse object with validated molFile and we have a validated voxel size, next we need a Voxelizer
-  Voxelizer v(m, voxelSize);
-
-  try{ v.voxelize(); } //here is where all the elements in the molFile and their respective electron clouds update the voxels, calls setUpGrid and populateGrid
   catch(const char *e) {
     std::cout << e << '\n';
     return;
@@ -121,7 +116,39 @@ void createActiveSite(const std::string path, const double voxelSize)
   v.exportJSON();
 }
 
-void addToAnActiveSite(const std::string path)
+void addToAnActiveSite(const std::string path) //path contains "active-site molFile"
 {
+  std::string activeSitePath, molFilePath, molFileDirectory, molFileName;
+  Voxelizer v; //Voxelizer object to hold active site and new molecule
+  std::size_t spacePosition = path.find(" "); //no need to check for string::npos because space character is guranteed
 
+  //split path into activeSite and molFile
+  activeSitePath = path.substr(0, spacePosition);
+  molFilePath = path.substr(spacePosition+1, path.size() - spacePosition);
+
+  //use to split path into a directory and filename
+  std::size_t posOfLastSlash = molFilePath.find_last_of('/');
+
+  if(posOfLastSlash != std::string::npos) {  //check if a directory is specified, later might not need
+    molFileDirectory = molFilePath.substr(0, posOfLastSlash+1);
+    molFileName = molFilePath.substr(posOfLastSlash+1, path.size() - posOfLastSlash);
+  }
+  else {
+    std::cout << "error in main - No specified directory for molfile" << '\n';
+    return;
+  }
+
+  MolParse m(molFileDirectory, molFileName); //by now we have directories and will use a try catch in case user gave bad info
+
+  try {
+    v.readActiveSite(activeSitePath); //open the existing active site
+    m.parseData();
+    v.setMolecule(m);
+    v.voxelize();
+    v.exportJSON();
+  }
+  catch(const char *e){
+    std::cout << e << '\n';
+    return;
+  }
 }
