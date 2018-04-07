@@ -1,8 +1,9 @@
 #include "Voxelizer.h"
 
 void createActiveSite(const std::string path,const double voxelSize);
+void addToActiveSite(const std::string path);
 
-//takes in a molFile path with filename and a voxelSize in angstrums, Voxelizes it and outputs to json
+//takes in a molFile path with filename and a voxelSize in angstrums, Voxelizes it and outputs to json...also can take a json file of an active site and a new molFile path to add to it
 int main(int argc, char** argv)
 {
   std::string path;
@@ -40,9 +41,11 @@ int main(int argc, char** argv)
   {
     path = argv[1];
 
-    if(path.find(".json") != std::string::npos) //.json found
+    if(path.find(".json") != std::string::npos) //.json found..so argv[1] = active site path and argv[2] = molFile path
     {
       addingToExisting = 'y'; //adding to an existing molfile
+      path += " "; //path now holds "molFile-path active-site-path" with space in the middle for seperator
+      path += argv[2];
     }
     else if(path.find(".mol") != std::string::npos) //.mol found
     {
@@ -63,7 +66,7 @@ int main(int argc, char** argv)
   }
   else //adding to existing, and we are sure addingToExisting == either y || n or their respective capitals
   {
-
+    addToActiveSite(path);
   }
 
   return 0;
@@ -118,4 +121,9 @@ void createActiveSite(const std::string path, const double voxelSize)
   }
 
   v.exportJSON();
+}
+
+void addToActiveSite(const std::string path)
+{
+
 }

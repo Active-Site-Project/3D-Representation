@@ -67,7 +67,7 @@ void Voxelizer::voxelize()
 
 	setGrid(molecule.getAtomList(), molecule.getAtomCount()); //set x,y,z transforms and numOfVoxels
 
-  if(numOfVoxels != 0)
+  if(numOfVoxels != 0 && grid.size() == 0)
 	{
     std::vector<Voxel> lv1(numOfVoxels);
 		std::vector<std::vector<Voxel>> lv2(numOfVoxels,lv1);
@@ -175,9 +175,9 @@ void Voxelizer::setGrid(const Atom * const &a, uint32_t count)
 	}
 
   //either there is or isnt a transform
-	x_transform = (min_x < 0)? -min_x: 0;
-	y_transform = (min_y < 0)? -min_y: 0;
-	z_transform = (min_z < 0)? -min_z: 0;
+	x_transform = (min_x < -x_transform)? -min_x: x_transform; //transforms will always be 0 or positive values
+	y_transform = (min_y < -y_transform)? -min_y: y_transform; //representing the opposite of the most negative value
+	z_transform = (min_z < -z_transform)? -min_z: z_transform;
 
   if (!numOfVoxels)
   {
@@ -259,7 +259,10 @@ void Voxelizer::exportJSON()
 
   //output the dimensions of the VoxelGrid as well as the size of each voxel
 	out << "VoxelGrid Dimensions: " << numOfVoxels << '\n';
-	out << "Voxel size: " << voxelSize << "\n\n"; //blank space between dimensions and voxels themselves
+	out << "Voxel size: " << voxelSize << "\n"; //blank space between dimensions and voxels themselves
+  out << "X transform: " << x_transform << "\n";
+  out << "Y transform: " << y_transform << "\n";
+	out << "Z transform: " << z_transform << "\n\n";
 
   //for each voxel we must write its properties
   for(uint32_t i = 0; i < numOfVoxels; ++i)
@@ -282,4 +285,9 @@ void Voxelizer::exportJSON()
 	}
 
 	out.close();
+}
+
+void Voxelizer::readJSON()
+{
+
 }
