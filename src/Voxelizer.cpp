@@ -25,12 +25,12 @@ Voxelizer::Voxelizer(const Voxelizer &v)
 }
 
 //good
-Voxelizer::Voxelizer(const MolParse &m, double v_size)
+Voxelizer::Voxelizer(const MolParse &m, double v_size, uint32_t gridDimensions)
 {
 	if(v_size <= 0)
 	  throw "Voxelizer - Voxel size must be positve.";
 	voxelSize = v_size;
-	numOfVoxels = 0;
+	numOfVoxels = gridDimensions;
 	x_transform = y_transform = z_transform = 0.0;
 	molecule = m;
 	voxelized_flag = false;
@@ -93,6 +93,7 @@ double Voxelizer::getYTransform() { return y_transform; }
 //working
 double Voxelizer::getZTransform() { return z_transform; }
 
+void Voxelizer::setDimensions(uint32_t gridDimensions) { numOfVoxels = gridDimensions; }
 //------------------------------------------------------------------------------
 //private
 
@@ -178,14 +179,17 @@ void Voxelizer::setGrid(const Atom * const &a, uint32_t count)
 	y_transform = (min_y < 0)? -min_y: 0;
 	z_transform = (min_z < 0)? -min_z: 0;
 
-	//number of voxels for cube will be max distance in any x rounded up, then divided by voxel size
-	double maxDistance = max_x - min_x;
-	if (maxDistance < (max_y - min_y))
-		maxDistance = max_y - min_y;
-	if (maxDistance < (max_z - min_z))
-		maxDistance = max_z - min_z;
+  if (!numOfVoxels)
+  {
+    //number of voxels for cube will be max distance in any x rounded up, then divided by voxel size
+  	double maxDistance = max_x - min_x;
+  	if (maxDistance < (max_y - min_y))
+  		maxDistance = max_y - min_y;
+  	if (maxDistance < (max_z - min_z))
+  		maxDistance = max_z - min_z;
 
-	numOfVoxels = uint32_t(maxDistance / voxelSize + 1); //add one to round up
+    numOfVoxels = uint32_t(maxDistance / voxelSize + 1); //add one to round up
+  }
 }
 
 //in progress
@@ -196,10 +200,12 @@ void Voxelizer::populateGrid(const Atom * const &a, uint32_t count)
   for(uint32_t i = 0; i < count ; ++i)
 	{
 		//get indecis for voxel placement, may be wrong at the current moment... truncation is not a problem
-		int index_x = (a[i].getX() + x_transform) / voxelSize;
-		int index_y = (a[i].getY() + y_transform) / voxelSize;
-		int index_z = (a[i].getZ() + z_transform) / voxelSize;
+		uint32_t index_x = (a[i].getX() + x_transform) / voxelSize;
+		uint32_t index_y = (a[i].getY() + y_transform) / voxelSize;
+		uint32_t index_z = (a[i].getZ() + z_transform) / voxelSize;
 
+    if (index_x >= numOfVoxels || index_y >= numOfVoxels || index_z >= numOfVoxels)
+      throw("populateGridError: Atom index falls outside of grid space specified by the user.");
 		grid[index_x][index_y][index_z].addProton(); //later will replace with different means
 		grid[index_x][index_y][index_z].addNeutron(); //representing nucleus
 
@@ -224,11 +230,13 @@ void Voxelizer::populateGrid(const Atom * const &a, uint32_t count)
 				temp_y += (a[i].getY() + y_transform); //actual point of electron with transform
 				temp_z += (a[i].getZ() + z_transform);
 
-				//corresponding indecis or place against wall
+				//corresponding indicies or place against wall
 				index_x = temp_x / voxelSize;
 				index_y = temp_y / voxelSize;
 				index_z = temp_z / voxelSize;
 
+        if (index_x >= numOfVoxels || index_y >= numOfVoxels || index_z >= numOfVoxels)
+          throw("populateGridError: Electron index falls outside of grid space specified by the user.");
 				grid[index_x][index_y][index_z].addElectron();
 			}
 		}
