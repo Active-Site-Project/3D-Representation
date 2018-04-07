@@ -234,6 +234,7 @@ void Voxelizer::populateGrid(const Atom * const &a, uint32_t count)
 				index_x = temp_x / voxelSize;
 				index_y = temp_y / voxelSize;
 				index_z = temp_z / voxelSize;
+
         if (index_x >= numOfVoxels || index_y >= numOfVoxels || index_z >= numOfVoxels)
           throw("populateGridError: Electron index falls outside of grid space specified by the user.");
 				grid[index_x][index_y][index_z].addElectron();
