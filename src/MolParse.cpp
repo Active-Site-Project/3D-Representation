@@ -4,22 +4,26 @@ const int HLEN = 3; //constant for default header length, can also be set in pro
 
 
 MolParse::MolParse() : // default constructor
-directory("mol/"), filename("data1.mol"), headerLength(HLEN), atomCount(0), bondCount(0)
+directory("mol/"), filename("data1.mol"), headerLength(HLEN), atomCount(0), bondCount(0), parsed_flag(false)
 {
 }
 
 MolParse::MolParse(std::string dir) : // constructor that specifies directory only
-directory(dir), filename("data1.mol"), headerLength(HLEN), atomCount(0), bondCount(0)
+directory(dir), filename("data1.mol"), headerLength(HLEN), atomCount(0), bondCount(0), parsed_flag(false)
 {
 }
 
 MolParse::MolParse(std::string dir, std::string file) : // constructor that specifies director and filename
-directory(dir), filename(file), headerLength(HLEN), atomCount(0), bondCount(0)
+directory(dir), filename(file), headerLength(HLEN), atomCount(0), bondCount(0), parsed_flag(false)
 {
 }
 
 void MolParse::parseData() //parse data function definition
 {
+
+  if(parsed_flag == true) //do nothing if parsed, or else old element list will be left floating in memory
+    return;
+
   std::ifstream molFile;
   std::string buffer, fileLocation;
   int fileNameLength = filename.length();
@@ -58,11 +62,12 @@ void MolParse::parseData() //parse data function definition
     getline(molFile, buffer, '\n');
   }
   molFile.close();
+  parsed_flag = true;
 }
 
 Atom* MolParse::getAtomList() //returns list of atoms for use in other program
 {
-  if (atomCount == 0) //there has to be atoms in elementList or error is thrown
+  if (parsed_flag == false) //there has to be atoms in elementList or error is thrown
     parseData(); //function that parses mol file and retrieves coordinate and bonding information
     //throw("no atoms currently available"); //not really sure how to handle errors in C++
   return elementList;
@@ -100,7 +105,7 @@ std::string MolParse::getFileName() const //returns name of file MolParse object
 
 void MolParse::displayMoleculeInfo()
 {
-  if (atomCount == 0) //there has to be atoms in elementList or error is thrown
+  if (parsed_flag == false) //there has to be atoms in elementList or error is thrown
     std::cout << "No atoms to display. Try parsing file first\n";
   else
   {
