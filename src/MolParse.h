@@ -29,7 +29,6 @@ class MolParse
     int bondCount; //number of bonds (have not done much with this)
     Atom *elementList; //list of atoms w/ info extracted from mol file
     int (*bondNum)[3]; //list of bond information (possibly need to arrange this in a more intuitive manner later on)
-    bool parsed_flag; //needed because if parse is called twice, element list will be left floating in memory
 };
 
 #endif

@@ -4,25 +4,26 @@ const int HLEN = 3; //constant for default header length, can also be set in pro
 
 
 MolParse::MolParse() : // default constructor
-directory("mol/"), filename("data1.mol"), headerLength(HLEN), atomCount(0), bondCount(0), parsed_flag(false)
+directory("mol/"), filename("data1.mol"), headerLength(HLEN), atomCount(0), bondCount(0)
 {
 }
 
 MolParse::MolParse(std::string dir) : // constructor that specifies directory only
-directory(dir), filename("data1.mol"), headerLength(HLEN), atomCount(0), bondCount(0), parsed_flag(false)
+directory(dir), filename("data1.mol"), headerLength(HLEN), atomCount(0), bondCount(0)
 {
 }
 
 MolParse::MolParse(std::string dir, std::string file) : // constructor that specifies director and filename
-directory(dir), filename(file), headerLength(HLEN), atomCount(0), bondCount(0), parsed_flag(false)
+directory(dir), filename(file), headerLength(HLEN), atomCount(0), bondCount(0)
 {
 }
 
 void MolParse::parseData() //parse data function definition
 {
 
-  if(parsed_flag == true) //do nothing if parsed, or else old element list will be left floating in memory
-    return;
+  if(atomCount) //do nothing if parsed, or else old element list will be left floating in memory
+      delete [] elementList;
+
 
   std::ifstream molFile;
   std::string buffer, fileLocation;
@@ -62,14 +63,12 @@ void MolParse::parseData() //parse data function definition
     getline(molFile, buffer, '\n');
   }
   molFile.close();
-  parsed_flag = true;
 }
 
 Atom* MolParse::getAtomList() //returns list of atoms for use in other program
 {
-  if (parsed_flag == false) //there has to be atoms in elementList or error is thrown
-    parseData(); //function that parses mol file and retrieves coordinate and bonding information
-    //throw("no atoms currently available"); //not really sure how to handle errors in C++
+  if (!atomCount) //there have to be atoms in elementList or error is thrown
+    throw("getAtomListError: No atoms currently available. Try parsing data."); //not really sure how to handle errors in C++
   return elementList;
 }
 
@@ -105,8 +104,8 @@ std::string MolParse::getFileName() const //returns name of file MolParse object
 
 void MolParse::displayMoleculeInfo()
 {
-  if (parsed_flag == false) //there has to be atoms in elementList or error is thrown
-    std::cout << "No atoms to display. Try parsing file first\n";
+  if (!atomCount) //there has to be atoms in elementList or error is thrown
+    throw("displayMoleculeInfoError: No atoms to display. Try parsing file first");
   else
   {
     std::cout << directory << filename << "\n\n";
