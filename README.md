@@ -1,7 +1,7 @@
 # Active-Site
 Models an Active site of a molecule in 3 dimensional space.
 
-How To Use:
+How To Install:
 
 1) Choose some directory for the application to be stored. (e.g. c:/my/path or ~/my/path)
 
