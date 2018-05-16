@@ -40,7 +40,16 @@ void MolParse::parseData() //parse data function definition
   for (int i = 0; i < headerLength; i++) //skip header of mol file (contains info we don't need)
     getline(molFile, buffer, '\n');
   molFile >> atomCount; //gets the total number of atoms from mol file
-  molFile >> bondCount; //gets the total number of bonds from mol file
+
+  if (atomCount >= 100000)
+  {
+    bondCount = atomCount % 1000;
+    atomCount = atomCount / 1000;
+  }
+  else
+  {
+    molFile >> bondCount; //gets the total number of bonds from mol file
+  }
   elementList = new Atom[atomCount]; //dynamically create a list of atoms based on the number of atoms in listed in mol file
   bondNum = new int[bondCount][3]; //dynamically create 2D array where each from row represents a different bond ([rows][columns])
   //the first column is the index of one element, second column is index of second element, and third column is bond type (single, double, etc)
@@ -56,9 +65,17 @@ void MolParse::parseData() //parse data function definition
   for (int i = 0; i < bondCount; i++) //initialize bond information from mol file
   {
     molFile >> bondNum[i][0];
-    bondNum[i][0]--; //subtract 1 so bond index is zero-indexed
-    molFile >> bondNum[i][1];
-    bondNum[i][1]--; //subtract 1 so bond index is zero-indexed
+    if (bondNum[i][0] >= 100000)
+    {
+      bondNum[i][1] = bondNum[i][0] % 1000 - 1;
+      bondNum[i][0] = bondNum[i][0] / 1000 - 1;
+    }
+    else
+    {
+      bondNum[i][0]--; //subtract 1 so bond index is zero-indexed
+      molFile >> bondNum[i][1];
+      bondNum[i][1]--; //subtract 1 so bond index is zero-indexed
+    }
     molFile >> bondNum[i][2];
     getline(molFile, buffer, '\n');
   }
