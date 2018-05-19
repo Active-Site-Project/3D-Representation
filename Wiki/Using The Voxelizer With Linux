@@ -10,8 +10,25 @@ and then add the 2 voxelized representations together.
 Everything at this moment uses 0 bonds and it would be very tough to actually
 determine which atoms are connected to recognize the actual molecules.
 
+Note - All commands to be run within the 3d-representation folder.
+--------------------------------------------------------------------------------
 ## Creating A New Voxelized Molecule Space (without bonds):
 
+In this case we need a mol file representing the molecule to be voxelized
+and then to decide the cubic voxel dimensions.For example, if we chose
+dimensions = 0.5, then each individual voxel will be
+(L = 0.5 x W = 0.5 x H = 0.5) in volume.
+
+Run:
+  - ./Voxelizer file dimensions
+
+and in 3d-representation/ you will find a new file, molecule.json, which is the
+voxelized spacial representation of the molecule that has been provided.
+--------------------------------------------------------------------------------
 ## Adding A New Molecule To A Voxelized Molecule Space (without bonds):
 
+1.
+--------------------------------------------------------------------------------
 ## Combining 2 Voxelized Molecule Spaces (without bonds):
+
+1.
