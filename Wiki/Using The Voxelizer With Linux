@@ -20,15 +20,31 @@ dimensions = 0.5, then each individual voxel will be
 (L = 0.5 x W = 0.5 x H = 0.5) in volume.
 
 Run:
-  - ./Voxelizer file dimensions
+  - ./Voxelizer molFile dimensions
 
 and in 3d-representation/ you will find a new file, molecule.json, which is the
 voxelized spacial representation of the molecule that has been provided.
+
+Note - Bonds are not implemented at the moment.
 --------------------------------------------------------------------------------
 ## Adding A New Molecule To A Voxelized Molecule Space (without bonds):
 
-1.
+In this case we need a Voxelized Molecule Space, yours will likely be
+molecule.json, and then a mol file representing the molecule to be added to the
+voxelized molecule space being provided.
+
+The cubic voxel dimensions will be the same as those in the voxelized molecule
+space provided.
+
+Run:
+  - ./Voxelizer voxelizedSpace.json molFile
+
+and in 3d-representation/ you will find a new file, molecule.json, which is the
+voxelized spacial representation of the provided voxelized molecule combined
+with the molecule that was to be added to the provided voxelized molecule.
+
+Note - Bonds are not implemented at the moment.
 --------------------------------------------------------------------------------
 ## Combining 2 Voxelized Molecule Spaces (without bonds):
 
-1.
+  * To be implemented
