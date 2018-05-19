@@ -1,7 +1,7 @@
 #include "Voxelizer.h"
 
 void createActiveSite(const std::string path,const double voxelSize); //creates a new active site
-void addToAnActiveSite(const std::string path); //adds the specified molfile to the specified active site
+void addMolToAnActiveSite(const std::string path); //adds the specified molfile to the specified active site
 char getUserChoice(); //returns user choice to add to existing active site
 
 //takes in a molFile path with filename and a voxelSize in angstrums, Voxelizes it and outputs to json...also can take a json file of an active site and a new molFile path to add to it
@@ -60,7 +60,7 @@ int main(int argc, char** argv)
   if(addingToExisting == 'n' || addingToExisting == 'N')   //new active-site
     createActiveSite(path, voxelSize);
   else //adding to existing, and we are sure addingToExisting == either y || n or their respective capitals
-    addToAnActiveSite(path);
+    addMolToAnActiveSite(path);
 
   return 0;
 }
@@ -116,7 +116,7 @@ void createActiveSite(const std::string path, const double voxelSize)
   v.exportJSON();
 }
 
-void addToAnActiveSite(const std::string path) //path contains "active-site molFile"
+void addMolToAnActiveSite(const std::string path) //path contains "active-site molFile"
 {
   std::string activeSitePath, molFilePath, molFileDirectory, molFileName;
   Voxelizer v; //Voxelizer object to hold active site and new molecule

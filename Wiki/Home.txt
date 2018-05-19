@@ -1,0 +1,4 @@
+## Welcome to the 3D-Representation wiki!
+
+Here is where you will find all the information on installing and using this
+project, depending on which platform you are on. (e.g. Windows, IOS, Linux).
