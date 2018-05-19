@@ -1,0 +1,18 @@
+Welcome to the 3D-Representation wiki!
+
+## Installing on Linux:
+
+1. Choose some directory for the application to be stored.
+   (e.g. `c:/my/path or ~/my/path`)
+
+2. If you have git installed then you can run -
+   `git clone https://github.com/Active-Site-Project/3D-Representation.git` -
+   from inside the directory that you you would like the project to be
+   installed in. If you do not have git installed,you can download the
+   repository .zip file and extract it to the directory that you would like
+   the project to be stored in.
+
+3. Navigate to 3D-Representation/ directory and run `make`. You can now either
+   run `./Voxelizer.exe` with command line arguments, or you can run
+   `./Voxelizer.exe` and it will prompt you for the .mol file and your desired
+   voxel size. (See wiki on Using The Voxelizer with Linux.)
