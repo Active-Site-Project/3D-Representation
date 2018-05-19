@@ -1,0 +1,17 @@
+Welcome to the 3D-Representation wiki!
+
+The Voxelizer will need a mol file representing the first molecule to be added
+to the Active-Site. Once the first molecule (or atom) has been voxelized, we
+can then add to our voxelized representation of the Active-Site by adding
+molecules (or atoms) to the molecule.json file that is used to represent the
+Active-Site. We can also separately voxelize the virus and the drug molecule
+and then add the 2 voxelized representations together.
+
+Everything at this moment uses 0 bonds and it would be very tough to actually
+determine which atoms are connected to recognize the actual molecules.
+
+## Creating A New Voxelized Molecule Space (without bonds):
+
+## Adding A New Molecule To A Voxelized Molecule Space (without bonds):
+
+## Combining 2 Voxelized Molecule Spaces (without bonds):
