@@ -1,0 +1,15 @@
+This is the documentation page for Voxelizer.h. It will mostly be centered
+around the Voxelizer class, however; this is where you will find everything
+related to the Voxelizer.h.
+
+--------------------------------------------------------------------------------
+## Global Constants:
+
+--------------------------------------------------------------------------------
+## Private Member Variables:
+
+--------------------------------------------------------------------------------
+## Private Member Functions:
+
+--------------------------------------------------------------------------------
+## Public Member Functions:
