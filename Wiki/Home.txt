@@ -3,6 +3,6 @@
 Here is where you will find all the information on installing and using this
 project, depending on which platform you are on. (e.g. Windows, IOS, Linux).
 
-This is a software for creating voxelized representations of molecules and
-atoms. The goal is to be able to simulate active-sites and drug to virus
+This is a software for creating voxelized representations of molecules.
+The goal is to be able to simulate active-sites and drug to virus
 molecule interactions.

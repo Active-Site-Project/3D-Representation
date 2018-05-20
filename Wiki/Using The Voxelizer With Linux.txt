@@ -1,0 +1,50 @@
+Welcome to the 3D-Representation wiki!
+
+The Voxelizer will need a mol file representing the first molecule to be added
+to the Active-Site. Once the first molecule (or atom) has been voxelized, we
+can then add to our voxelized representation of the Active-Site by adding
+molecules (or atoms) to the molecule.json file that is used to represent the
+Active-Site. We can also separately voxelize the virus and the drug molecule
+and then add the 2 voxelized representations together.
+
+Everything at this moment uses 0 bonds and it would be very tough to actually
+determine which atoms are connected to recognize the actual molecules.
+
+Note - All commands to be run within the 3d-representation folder.
+--------------------------------------------------------------------------------
+## Creating A New Voxelized Molecule Space (without bonds):
+
+In this case we need a mol file representing the molecule to be voxelized
+and then to decide the cubic voxel dimensions.For example, if we chose
+dimensions = 0.5, then each individual voxel will be
+(L = 0.5 x W = 0.5 x H = 0.5) in volume.
+
+Run:
+  - ./Voxelizer molFile dimensions
+
+and in 3d-representation/ you will find a new file, molecule.json, which is the
+voxelized spacial representation of the molecule that has been provided.
+
+Note - Bonds are not implemented at the moment.
+--------------------------------------------------------------------------------
+## Adding A New Molecule To A Voxelized Molecule Space (without bonds):
+
+In this case we need a Voxelized Molecule Space, yours will likely be
+molecule.json, and then a mol file representing the molecule to be added to the
+voxelized molecule space being provided.
+
+The cubic voxel dimensions will be the same as those in the voxelized molecule
+space provided.
+
+Run:
+  - ./Voxelizer voxelizedSpace.json molFile
+
+and in 3d-representation/ you will find a new file, molecule.json, which is the
+voxelized spacial representation of the provided voxelized molecule combined
+with the molecule that was to be added to the provided voxelized molecule.
+
+Note - Bonds are not implemented at the moment.
+--------------------------------------------------------------------------------
+## Combining 2 Voxelized Molecule Spaces (without bonds):
+
+  * To be implemented

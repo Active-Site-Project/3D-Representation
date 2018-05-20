@@ -1,0 +1,47 @@
+## Private Member Variables:
+
+  - uint64_t protons: Used to keep track of the number of protons in a
+                      particular Voxel. Later we plan to associate RGB values
+                      towards the unity implementation side.
+
+  - uint64_t neutrons:  Used to keep track of the number of neutrons in a
+                        particular Voxel. Later we plan to associate RGB values
+                        towards the unity implementation side.
+
+  - uint64_t electrons: Used to keep track of the number of electrons in a
+                        particular Voxel. Later we plan to associate RGB values
+                        towards the unity implementation side.
+
+--------------------------------------------------------------------------------
+## Public Member Functions:
+
+  - Voxel():  Default Constructor. Sets private member variables protons,
+              neutrons and electrons to 0.
+
+  - Voxel(const Voxel&):  Copy Constructor. Sets private member variables
+                          protons, neutrons and electrons to the corresponding
+                          values of the Voxel provided.
+
+  - uint64_t getProtons():  Returns the number of protons in the Voxel.
+
+  - uint64_t getNeutrons(): Retuns the number of neutrons in the Voxel.
+
+  - uint64_t getElectrons():  Returns the number of electrons in the Voxel.
+
+  - void addProton(): Increments the value of private member variable
+                      uint64_t protons by 1.
+
+  - void addNeutron():  Increments the value of private member variable
+                        uint64_t neutrons by 1.
+
+  - void addElectron(): Increments the value of private member variable
+                        uint64_t electrons by 1.
+
+  - void addProtons(uint64_t):  Increments the value of private member variable
+                                uint64_t protons by some number.
+
+  - void addNeutrons(uint64_t): Increments the value of private member variable
+                                uint64_t neutrons by some number.
+
+  - void addElectrons(uint64_t):  Increments the value of private member variable
+                                  uint64_t electrons by some number.
