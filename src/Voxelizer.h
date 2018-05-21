@@ -18,14 +18,14 @@ class Voxelizer
 	  double voxelSize;   //will be length width and height of each voxel
 	  double x_transform, y_transform, z_transform; //transform entire molecule onto pos xy plane, 1st octet
     bool voxelized_flag, site_active; //use to know if voxelized and site active, site will be active without being voxelized, when reading in an existing active_site
-    void setDimensions(uint32_t);
+    void setDimensions(uint32_t); //sets numOfVoxels which is the cubic dimensions of the VoxelGrid
 	  void setGrid(const Atom * const &, uint32_t); //finds transform to move all points into octet 1 (x,y,z > 0), and cube dimensions in numOfVoxels
 	  void populateGrid(const Atom * const &, uint32_t); //will go through and populate protons, neutrons and electrons
     void resizeGrid(); //helper function to resize grid when needed
 
   public:
 	  Voxelizer(); //empty grid, will need to provide molParse object to voxelize later with Voxelize function
-	  Voxelizer(const Voxelizer &); //object will be voxelized if copying object is voxelized
+	  Voxelizer(const Voxelizer &); //object must be voxelized even if copied object has been voxelized
 	  Voxelizer(const MolParse &, double = 0.5, uint32_t = 0); //automatically starts the grid with 0.5 voxelSize... RECOMMENDED
 
 	  void setVoxelSize(double v_size); //set dimensions for cubic voxel in angstrums
