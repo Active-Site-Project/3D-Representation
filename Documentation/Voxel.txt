@@ -1,3 +1,8 @@
+This is the documentation page for Voxel.h. It will mostly be centered around
+the Voxel class, however; this is where you will find everything related to the
+Voxel.h.
+
+--------------------------------------------------------------------------------
 ## Private Member Variables:
 
   - uint64_t protons: Used to keep track of the number of protons in a

@@ -1,0 +1,131 @@
+This is the documentation page for Voxelizer.h. It will mostly be centered
+around the Voxelizer class, however; this is where you will find everything
+related to the Voxelizer.h.
+
+--------------------------------------------------------------------------------
+## Global Constants:
+
+  - const string writeFilePath: Path and name to where the voxelized
+                                molecule will be stored. Right now,
+                                the implementation is that all molecules
+                                will have the same name and overwrite
+                                prior molecules. Needs to be changed such
+                                that this is only the path and the name
+                                is specified by the user or has a Default
+                                Name.
+
+  - const string eCloudDirectory: Directory of where to find the
+                                  relational electron points for atoms.
+                                  Points are based on Atomic Radii.
+
+--------------------------------------------------------------------------------
+## Private Member Variables:
+
+  - vector<vector<vector<Voxel>>> grid: 3 dimensional vector of Voxels to
+                                        represent the grid which we put the
+                                        molecule in.
+
+  - MolParse molecule:  MolParse object used for getting atoms and their
+                        respective position points out of a provided mol file.
+
+  - uint32_t numOfVoxels: Since the Voxel grid is cubic, numOfVoxels refers to
+                          the length, width and height of the Voxel grid.
+                          Therefore, the actual number of voxels presented is
+                          numOfVoxels^3.
+
+  - double voxelSize: Length width and height of each Voxel. This is not a trait
+                      of the Voxel class because, each voxel space is considered
+                      to be cubic as well. So voxelSize refers to length, width
+                      and height of each Voxel in the grid. Therefore, the
+                      volume of any Voxel will be voxelSize^3.
+
+  - double x_transform: The minimum distance required to make sure all x
+                        coordinates in the molecule, electron cloud coordinates
+                        included, are in the first octet of 3 dimensional space.
+                        In other words, D={(x,y,z) | x > 0}.
+
+  - double y_transform: The minimum distance required to make sure all y
+                        coordinates in the molecule, electron cloud coordinates
+                        included, are in the first octet of 3 dimensional space.
+                        In other words, D={(x,y,z) | y > 0}.
+
+  - double z_transform: The minimum distance required to make sure all z
+                        coordinates in the molecule, electron cloud coordinates
+                        included, are in the first octet of 3 dimensional space.
+                        In other words, D={(x,y,z) | z > 0}.
+
+  - bool voxelized_flag:  Keeps track of whether or not the current Voxelizer
+                          object has been Voxelized, or represented by a 3-D
+                          Voxel grid.
+
+  - bool site_active: Keeps track of whether or not the site is active. A site
+                      is active once it has been Voxelized. Sites can also be
+                      active without Voxelizing current mol file when we are
+                      adding to an existing Voxelized molecule.
+
+Note: After all three transforms we have D = {(x,y,z) | x > 0, y > 0, z > 0}.
+--------------------------------------------------------------------------------
+## Private Member Functions:
+
+  - void setDimensions(uint32_t): Manually set numOfVoxels.
+
+  - void setGrid(const Atom * const &, uint32_t): Finds transforms to move all
+                                                  points into octet 1.
+                                                  (x,y,z) > 0, and sets
+                                                  numOfVoxels (cubic dimensions
+                                                  needed to encapsulate the
+                                                  molecule).
+
+  - void populateGrid(const Atom * const &, uint32_t):  Populates the protons,
+                                                        neutrons and electrons
+                                                        of each Voxel in the
+                                                        grid. Information comes
+                                                        from the mol file as
+                                                        well as the electron
+                                                        cloud point
+                                                        representations.
+
+  - void resizeGrid():  Helper function to resize grid when needed. Used
+                        because we need to declare to vectors to resize and we
+                        want those helpers vectors to be deallocated after
+                        resizing.
+
+--------------------------------------------------------------------------------
+## Public Member Functions:
+
+  - Voxelizer():  Empty grid with default voxelSize of 0.5. You will need to
+                  provide a MolParse object to Voxelize later with Voxelize()
+                  function.
+
+  - Voxelizer(const Voxelizer &): Copy constructor. The new object will need to
+                                  be Voxelized even if the copied object has
+                                  been Voxelized already.
+
+  - Voxelizer(const MolParse &, double=0.5, uint32_t=0):  Constructor. Defaults
+                                                          voxelSize to 0.5 and
+                                                          numOfVoxels to 0.
+
+  - void setVoxelSize(double v_size): Manually set the dimensions for each cubic
+                                      voxel in angstroms.
+
+  - void setMolecule(const MolParse &): Manually set the MolParse object
+                                        associated with Voxel Grid
+
+  - uint32_t getDimensions(): Returns numOfVoxels.
+
+  - double getVoxelSize():  Returns voxelSize.
+
+  - double getXTranform():  Returns x_transform.
+  - double getYTransform(): Returns y_transform.
+  - double getZTransform(): Returns z_transform.
+
+  - void voxelize():  Allocate space in the grid if need be, sets the transforms
+                      and popoulates the grid. Utilizes setGrid(), resizeGrid()
+                      and populateGrid().
+
+  - void exportJSON():  Writes numOfVoxels, voxelSize and the entire Voxel grid
+                        to a json similar format.
+
+  - void readActiveSite(std::string): Reads in a Voxelized Molecule json and
+                                      populates a NEW grid. Utilizes
+                                      resizeGrid().

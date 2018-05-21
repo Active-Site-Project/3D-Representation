@@ -67,7 +67,7 @@ void Voxelizer::voxelize()
 
 	setGrid(molecule.getAtomList(), molecule.getAtomCount()); //set x,y,z transforms and numOfVoxels
 
-  if(numOfVoxels != 0 && grid.size() == 0)
+  if(numOfVoxels != 0 && grid.size() == 0) //checks if we already have a grid || no voxels needed so empty mol file
     resizeGrid(); //allocate cube with dimensions numOfVoxels
 
   populateGrid(molecule.getAtomList(), molecule.getAtomCount()); //this is where voxel proton, neutron and elctron counts will be incremented
@@ -128,7 +128,7 @@ void Voxelizer::exportJSON()
 //takes in an acitve site, sets the transforms, number of voxels, and voxelsize... can only be called if cuurent Voxelizer object is not voxelized
 void Voxelizer::readActiveSite(std::string activeSite)
 {
-  if(voxelized_flag != false) //if not voxelized, then grid.size() will be 0
+  if(voxelized_flag != false) //if not voxelized, then grid.size() will be 0, later we can check to see if this new one fits with already voxelized, and that would make order not important
 	  throw "Cannot add an active-site to an already voxelized molecule. \nRead Active site first, and then voxelize with the second smaller molecule.";
 
   std::ifstream in(activeSite.c_str());
@@ -287,7 +287,7 @@ void Voxelizer::setGrid(const Atom * const &a, uint32_t count)
   }
 }
 
-//in progress
+//working
 void Voxelizer::populateGrid(const Atom * const &a, uint32_t count)
 {
 	std::ifstream e_cloud;
