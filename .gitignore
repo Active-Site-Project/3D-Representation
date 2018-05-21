@@ -40,3 +40,5 @@ Thumbs.db
 *.json
 
 programfiles #ignore program files directory
+Voxelizer
+ElectronCloudGenerator

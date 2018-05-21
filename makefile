@@ -1,3 +1,5 @@
+Entire: Voxelizer ElectronCloudGenerator
+
 Voxelizer: programfiles programfiles/main.o
 	g++ -o Voxelizer programfiles/main.o programfiles/Voxelizer.o programfiles/Voxel.o programfiles/MolParse.o programfiles/Atom.o
 programfiles/main.o: src/main.cpp programfiles/Voxelizer.o programfiles/MolParse.o
@@ -10,5 +12,13 @@ programfiles/MolParse.o: src/MolParse.cpp src/MolParse.h programfiles/Atom.o
 	g++ -o programfiles/MolParse.o src/MolParse.cpp -c -Wall -pedantic -g
 programfiles/Atom.o: src/Atom.cpp src/Atom.h
 	g++ -o programfiles/Atom.o src/Atom.cpp -c -Wall -pedantic -g
+
+
+ElectronCloudGenerator: programfiles programfiles/ElectronGenerator.o
+	g++ -o ElectronCloudGenerator programfiles/ElectronGenerator.o
+programfiles/ElectronGenerator.o: src/ElectronGenerator.cpp
+	g++ -o programfiles/ElectronGenerator.o src/ElectronGenerator.cpp -c -Wall -pedantic -g
+
+
 programfiles:
 	mkdir programfiles
