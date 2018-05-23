@@ -6,11 +6,12 @@ void moleculeWithMolecule(const std::string path, const std::string outFile); //
 double getVoxelSize();
 std::string getMolFilePath();
 std::string getMoleculePath();
+std::string getOutputFile();
 
 //takes in a molFile path with filename and a voxelSize in angstrums, Voxelizes it and outputs to json...also can take a json file of an active site and a new molFile path to add to it
 int main(int argc, char** argv)
 {
-  std::string path;
+  std::string path, outFile;
   double voxelSize = 0.0;
   char addingToExisting = 0, combiningSpaces = 0; //used to tell if creating new space, space with mol or sapce with space
 
@@ -33,6 +34,7 @@ int main(int argc, char** argv)
         case 1:
           path = getMolFilePath();  //get the molFile path with filename from user
           voxelSize = getVoxelSize(); //get the voxel size from user
+          outFile = getOutputFile();
           done = true;
           break;
 
@@ -40,6 +42,7 @@ int main(int argc, char** argv)
           path = getMoleculePath();
           path += " ";
           path += getMolFilePath();
+          outFile = getOutputFile();
           addingToExisting = 'y';
           done = true;
           break;
@@ -48,6 +51,7 @@ int main(int argc, char** argv)
           path = getMoleculePath();
           path += " ";
           path += getMoleculePath();
+          outFile = getOutputFile();
           combiningSpaces = 'y';
           done = true;
           break;
@@ -59,6 +63,7 @@ int main(int argc, char** argv)
   else if(argc == 4) //user is running with command line arguments, need to get file extension and check if json or mol
   {
     path = argv[1]; //path to active site or molFile path
+    outFile = argv[3];
 
     if(path.find(".json") != std::string::npos) {  //.json found..so argv[1] = active site path and argv[2] = molFile path
       if(std::string(argv[2]).find(".json") != std::string::npos) { //second file is molecule space, so combining 2 molecule spaces
@@ -83,11 +88,11 @@ int main(int argc, char** argv)
 
   //path at this point either is the molFile path, or then active site path, a space, and then the molFile path
   if(addingToExisting == 'y' || addingToExisting == 'Y')
-    molWithMolecule(path, argv[3]); //combine molfile to a molecule space
+    molWithMolecule(path, outFile); //combine molfile to a molecule space
   else if(combiningSpaces == 'y' || combiningSpaces == 'Y')  //new active-sitengSpaces == 'y' || combiningSpaces == 'Y')
-    moleculeWithMolecule(path, argv[3]); //combine 2 molecule spaces
+    moleculeWithMolecule(path, outFile); //combine 2 molecule spaces
   else
-    createMoleculeSpace(path, voxelSize, argv[3]); //new active-site
+    createMoleculeSpace(path, voxelSize, outFile); //new active-site
   return 0;
 }
 
@@ -114,6 +119,14 @@ std::string getMoleculePath() //path to molecule space
 {
   std::string rtrn;
   std::cout << "Specify the path and file name to a molecule space you would like to add t.\n";
+  std::cin >> rtrn;
+  return rtrn;
+}
+
+std::string getOutputFile()
+{
+  std::string rtrn;
+  std::cout << "Specify the path and file name for the outputted molecule space.\n";
   std::cin >> rtrn;
   return rtrn;
 }
