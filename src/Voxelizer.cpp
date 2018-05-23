@@ -90,8 +90,8 @@ void Voxelizer::setDimensions(uint32_t gridDimensions) { numOfVoxels = gridDimen
 //exports to a json style format
 void Voxelizer::exportJSON()
 {
-	if(voxelized_flag == false)
-	  throw "Must voxelize molecule first.";
+	if(voxelized_flag == false && site_active == false)
+	  throw "Must voxelize or have an active molecule first.";
 
 	std::ofstream out(writeFilePath.c_str()); //will overwrite old write file
 
@@ -133,6 +133,8 @@ void Voxelizer::readActiveSite(std::string activeSite)
 
   std::ifstream in(activeSite.c_str());
 	std::string s; //use to exctract data
+	uint64_t tempNumVoxels;
+	double tempVoxelSize;
 
   if(in.good()) {
 		in >> s; //read in fileType, MoleculeGrid V1.0, .mg in the future possibly
@@ -141,26 +143,37 @@ void Voxelizer::readActiveSite(std::string activeSite)
 
 		//read in dimensions
 		in >> s; in >> s; //get rid of "VoxelGrid Dimensions: "
-		in >> numOfVoxels;
+		in >> tempNumVoxels;
 		in >> s; in >> s; //get rid of "Voxel size: "
-		in >> voxelSize;
+		in >> tempVoxelSize;
 
-		resizeGrid(); //allocate cube with dimensions numOfVoxels
+		if(site_active) //grid will be alive arleady with cube dimensions numOfVoxels and numOfVoxels and voxelSize set
+		{
+			if(tempNumVoxels > numOfVoxels) //throw error or do nothing and continue to add to the handled space
+				throw "Molecule space is larger than space being combined with.\n Not yet implemented.";
+
+		}
+		else
+		{
+			numOfVoxels = tempNumVoxels;
+			voxelSize = tempVoxelSize;
+			resizeGrid(); //allocate cube with dimensions numOfVoxels
+		}
 
 		//populate grid with voxels in file
 		uint64_t tempParticles;
 		for(uint32_t i = 0; i < numOfVoxels; ++i) {
 			for(uint32_t j = 0; j < numOfVoxels; ++j) {
-			  for(uint32_t k = 0; k < numOfVoxels; ++k) {
+				for(uint32_t k = 0; k < numOfVoxels; ++k) {
 					in >> s; in >> s;//get rid of '{' , '\t' , and "protons: "
 					in >> tempParticles; //get number of protons
 					if(tempParticles > 0)
-					 	grid[i][j][k].addProtons(tempParticles); //adds protons to grid if there are any
+						grid[i][j][k].addProtons(tempParticles); //adds protons to grid if there are any
 
 					in >> s; in >> s;//get rid of ',' , '\t' , and "neutrons: "
 					in >> tempParticles; //get number of neutrons
 					if(tempParticles > 0)
-					 	grid[i][j][k].addNeutrons(tempParticles); //adds neutrons to grid if there are any
+						grid[i][j][k].addNeutrons(tempParticles); //adds neutrons to grid if there are any
 
 					in >> s; in >> s;//get rid of ',' , '\t' , and "electrons: "
 					in >> tempParticles; //get number of electrons

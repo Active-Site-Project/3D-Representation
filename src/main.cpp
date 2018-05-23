@@ -23,7 +23,7 @@ int main(int argc, char** argv)
     {
       std::cout << "1. Create a new molecule space\n";
       std::cout << "2. Add a mol file to a molecule space.\n";
-      std::cout << "3. Combine 2 molecule spaces.\n\n";
+      std::cout << "3. Combine 2 molecule spaces. Larger one first.\n\n";
       std::cout << "How would you like to use the Voxelizer? Enter 1-3 as your selection.\n";
 
       std::cin >> choice;
@@ -190,5 +190,25 @@ void molWithMolecule(const std::string path) //path contains "active-site molFil
 
 void moleculeWithMolecule(const std::string  path) //path contains 2 molcule spaces
 {
-  std::cout << "combining spaces.\n" << path << '\n';
+  std::string space1Path, space2Path;
+  Voxelizer v; //Voxelizer object to hold active site and new molecule
+  std::size_t spacePosition = path.find(" "); //no need to check for string::npos because space character is guranteed
+
+  //split path into activeSite and molFile
+  space1Path = path.substr(0, spacePosition);
+  space2Path = path.substr(spacePosition+1, path.size() - spacePosition);
+
+  std::cout << space1Path << "\t" << space2Path << '\n';
+
+  try
+  {
+    v.readActiveSite(space1Path);
+    v.readActiveSite(space2Path);
+    v.exportJSON();
+  }
+  catch(const char *e)
+  {
+    std::cout << e << '\n';
+    return;
+  }
 }
