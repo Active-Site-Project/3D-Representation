@@ -93,7 +93,7 @@ void Voxelizer::exportJSON(const std::string outFile)
 	if(voxelized_flag == false && site_active == false)
 	  throw "Must voxelize or have an active molecule first.";
 
-	std::ofstream out(outFile.c_str()); //will overwrite old write file
+	std::ofstream out((outFile + ".json").c_str()); //will overwrite old write file
 
   //output MoleculeGrid-V1.0 so that when reading we can tell that this is a MoleculeGrid-V1.0, json style, file type.
   out << "MoleculeGrid-V1.0\n";
