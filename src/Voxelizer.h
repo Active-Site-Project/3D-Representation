@@ -6,7 +6,6 @@
 #include <fstream>
 #include <vector>
 
-const std::string writeFilePath = "molecule.json"; //will change later for user to specify
 const std::string eCloudDirectory = "ElectronClouds/";
 
 class Voxelizer
@@ -39,7 +38,7 @@ class Voxelizer
 
     void voxelize(); //allocate, populate grid with protons, neutrons and electrons... exporting to json is seperate because we may want to track other interactions within the voxels
 
-    void exportJSON(); //write all voxels to json file
+    void exportJSON(const std::string); //write all voxels to json file
     void readActiveSite(std::string); //reads in an active-site json and populates a NEW grid
 };
 

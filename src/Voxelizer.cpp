@@ -88,12 +88,12 @@ double Voxelizer::getZTransform() { return z_transform; }
 void Voxelizer::setDimensions(uint32_t gridDimensions) { numOfVoxels = gridDimensions; }
 
 //exports to a json style format
-void Voxelizer::exportJSON()
+void Voxelizer::exportJSON(const std::string outFile)
 {
 	if(voxelized_flag == false && site_active == false)
 	  throw "Must voxelize or have an active molecule first.";
 
-	std::ofstream out(writeFilePath.c_str()); //will overwrite old write file
+	std::ofstream out(outFile.c_str()); //will overwrite old write file
 
   //output MoleculeGrid-V1.0 so that when reading we can tell that this is a MoleculeGrid-V1.0, json style, file type.
   out << "MoleculeGrid-V1.0\n";

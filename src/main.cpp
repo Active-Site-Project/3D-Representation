@@ -1,8 +1,8 @@
 #include "Voxelizer.h"
 
-void createMoleculeSpace(const std::string path,const double voxelSize); //creates a new active site
-void molWithMolecule(const std::string path); //add mol file to molecule space
-void moleculeWithMolecule(const std::string path); //combines 2 molecule spaces
+void createMoleculeSpace(const std::string path,const double voxelSize, const std::string outFile); //creates a new active site
+void molWithMolecule(const std::string path, const std::string outFile); //add mol file to molecule space
+void moleculeWithMolecule(const std::string path, const std::string outFile); //combines 2 molecule spaces
 double getVoxelSize();
 std::string getMolFilePath();
 std::string getMoleculePath();
@@ -56,7 +56,7 @@ int main(int argc, char** argv)
       }
     }
   }
-  else if(argc == 3) //user is running with command line arguments, need to get file extension and check if json or mol
+  else if(argc == 4) //user is running with command line arguments, need to get file extension and check if json or mol
   {
     path = argv[1]; //path to active site or molFile path
 
@@ -83,11 +83,11 @@ int main(int argc, char** argv)
 
   //path at this point either is the molFile path, or then active site path, a space, and then the molFile path
   if(addingToExisting == 'y' || addingToExisting == 'Y')
-    molWithMolecule(path); //combine molfile to a molecule space
+    molWithMolecule(path, argv[3]); //combine molfile to a molecule space
   else if(combiningSpaces == 'y' || combiningSpaces == 'Y')  //new active-sitengSpaces == 'y' || combiningSpaces == 'Y')
-    moleculeWithMolecule(path); //combine 2 molecule spaces
+    moleculeWithMolecule(path, argv[3]); //combine 2 molecule spaces
   else
-    createMoleculeSpace(path, voxelSize); //new active-site
+    createMoleculeSpace(path, voxelSize, argv[3]); //new active-site
   return 0;
 }
 
@@ -118,7 +118,7 @@ std::string getMoleculePath() //path to molecule space
   return rtrn;
 }
 
-void createMoleculeSpace(const std::string path, const double voxelSize)
+void createMoleculeSpace(const std::string path, const double voxelSize, const std::string outFile)
 {
   //by this point we have what was given by the user and now need to verify data integrity
   //get directory and filename form the user
@@ -148,10 +148,10 @@ void createMoleculeSpace(const std::string path, const double voxelSize)
     return;
   }
 
-  v.exportJSON();
+  v.exportJSON(outFile);
 }
 
-void molWithMolecule(const std::string path) //path contains "active-site molFile"
+void molWithMolecule(const std::string path, const std::string outFile) //path contains "active-site molFile"
 {
   std::string activeSitePath, molFilePath, molFileDirectory, molFileName;
   Voxelizer v; //Voxelizer object to hold active site and new molecule
@@ -180,7 +180,7 @@ void molWithMolecule(const std::string path) //path contains "active-site molFil
     m.parseData();
     v.setMolecule(m);
     v.voxelize();
-    v.exportJSON();
+    v.exportJSON(outFile);
   }
   catch(const char *e){
     std::cout << e << '\n';
@@ -188,7 +188,7 @@ void molWithMolecule(const std::string path) //path contains "active-site molFil
   }
 }
 
-void moleculeWithMolecule(const std::string  path) //path contains 2 molcule spaces
+void moleculeWithMolecule(const std::string  path, const std::string outFile) //path contains 2 molcule spaces
 {
   std::string space1Path, space2Path;
   Voxelizer v; //Voxelizer object to hold active site and new molecule
@@ -204,7 +204,7 @@ void moleculeWithMolecule(const std::string  path) //path contains 2 molcule spa
   {
     v.readActiveSite(space1Path);
     v.readActiveSite(space2Path);
-    v.exportJSON();
+    v.exportJSON(outFile);
   }
   catch(const char *e)
   {
