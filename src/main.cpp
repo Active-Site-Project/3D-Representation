@@ -1,9 +1,10 @@
 #include "Voxelizer.h"
 
-void createMoleculeSpace(const std::string path,const double voxelSize, const std::string outFile); //creates a new active site
+void createMoleculeSpace(const std::string path,const double voxelSize, const uint32_t numOfVoxels, const std::string outFile); //creates a new active site
 void molWithMolecule(const std::string path, const std::string outFile); //add mol file to molecule space
 void moleculeWithMolecule(const std::string path, const std::string outFile); //combines 2 molecule spaces
 double getVoxelSize();
+uint32_t getGridDimensions();
 std::string getMolFilePath();
 std::string getMoleculePath();
 std::string getOutputFile();
@@ -13,6 +14,7 @@ int main(int argc, char** argv)
 {
   std::string path, outFile;
   double voxelSize = 0.0;
+  uint32_t voxels = 0;
   char addingToExisting = 0, combiningSpaces = 0; //used to tell if creating new space, space with mol or sapce with space
 
   if(argc == 1) //user is running program without passing command line argument
@@ -35,6 +37,7 @@ int main(int argc, char** argv)
           path = getMolFilePath();  //get the molFile path with filename from user
           voxelSize = getVoxelSize(); //get the voxel size from user
           outFile = getOutputFile();
+          voxels = getGridDimensions();
           done = true;
           break;
 
@@ -60,7 +63,7 @@ int main(int argc, char** argv)
       }
     }
   }
-  else if(argc == 4) //user is running with command line arguments, need to get file extension and check if json or mol
+  else if(argc == 5 || argc == 4) //user is running with command line arguments, need to get file extension and check if json or mol
   {
     path = argv[1]; //path to active site or molFile path
     outFile = argv[3];
@@ -78,6 +81,7 @@ int main(int argc, char** argv)
     }
     else if(path.find(".mol") != std::string::npos) {  //.mol found
       voxelSize = std::atof(argv[2]);
+      voxels = std::atoi(argv[4]); //will be 4th argument, molfile voxelSize outFile numOfVoxels... might need error checking later
     }
   }
   else
@@ -92,7 +96,7 @@ int main(int argc, char** argv)
   else if(combiningSpaces == 'y' || combiningSpaces == 'Y')  //new active-sitengSpaces == 'y' || combiningSpaces == 'Y')
     moleculeWithMolecule(path, outFile); //combine 2 molecule spaces
   else
-    createMoleculeSpace(path, voxelSize, outFile); //new active-site
+    createMoleculeSpace(path, voxelSize, voxels, outFile); //new active-site
   return 0;
 }
 
@@ -105,6 +109,14 @@ double getVoxelSize()
   std::cout << "Specify the Voxel Size in angstrums.\n";
   std::cin >> size;
   return size;
+}
+
+uint32_t getGridDimensions()
+{
+  uint32_t voxels;
+  std::cout << "Specify the dimensions necessary to encapsulate this molecule space.\n";
+  std::cin >> voxels;
+  return voxels;
 }
 
 std::string getMolFilePath() //path to molFile
@@ -131,7 +143,7 @@ std::string getOutputFile()
   return rtrn;
 }
 
-void createMoleculeSpace(const std::string path, const double voxelSize, const std::string outFile)
+void createMoleculeSpace(const std::string path, const double voxelSize, const uint32_t numOfVoxels, const std::string outFile)
 {
   //by this point we have what was given by the user and now need to verify data integrity
   //get directory and filename form the user
@@ -154,6 +166,7 @@ void createMoleculeSpace(const std::string path, const double voxelSize, const s
     m.parseData();  //this will throw error if cannot access molFile
     v.setMolecule(m); //at this point we have valid molFile data if no errors thrown
     v.setVoxelSize(voxelSize); //will throw error if <= 0
+    v.setDimensions(numOfVoxels); //get voxel dimensions from user, later might be constant for network
     v.voxelize();
   }
   catch(const char *e) {
