@@ -9,6 +9,7 @@ Voxelizer::Voxelizer()
 	voxelSize = 0.5;
 	x_transform = y_transform = z_transform = 0.0;
 	voxelized_flag = site_active = false;
+	bindingEnergy = 0;
 }
 
 //note-to-self: do not set transforms and other stuff until system for avoiding setUpGrid is thoroughly though out
@@ -21,16 +22,18 @@ Voxelizer::Voxelizer(const Voxelizer &v)
 	z_transform = 0.0;
 	molecule = v.molecule;
 	voxelized_flag = site_active = false;
+	bindingEnergy = 0;
 }
 
 //for now can only copy an active site from a molFile, not from an existing active site
-Voxelizer::Voxelizer(const MolParse &m, double v_size, uint32_t gridDimensions)
+Voxelizer::Voxelizer(const ChemParse &m, double v_size, uint32_t gridDimensions)
 {
 	voxelSize = v_size;
 	numOfVoxels = gridDimensions;
 	x_transform = y_transform = z_transform = 0.0;
 	molecule = m;
 	voxelized_flag = site_active = false;
+	bindingEnergy = m.getBindingEnergy();
 }
 
 //set Voxel dimensions
@@ -53,8 +56,8 @@ void Voxelizer::setVoxelSize(double v_size)
 		voxelSize = v_size;
 }
 
-//set MolParse object associated
-void Voxelizer::setMolecule(const MolParse &m) { molecule = m; }
+//set ChemParse object associated
+void Voxelizer::setMolecule(const ChemParse &m) { molecule = m; bindingEnergy = m.getBindingEnergy(); }
 
 //Voxelizes a molFile into a new active site, or adds it to an existing active site
 void Voxelizer::voxelize()
@@ -104,7 +107,8 @@ void Voxelizer::exportJSON(const std::string outFile)
   //output the dimensions of the VoxelGrid as well as the size of each voxel
 	out << "VoxelGrid Dimensions: " << numOfVoxels << '\n';
 	out << "Voxel size: " << voxelSize << '\n'; //blank space between dimensions and voxels themselves
-	out << "Transforms: " << x_transform << " " << y_transform << " " << z_transform << "\n\n";
+	out << "Transforms: " << x_transform << " " << y_transform << " " << z_transform << "\n";
+	out << "Binding Energy: " << bindingEnergy << "\n\n";
 
   //for each voxel we must write its properties
   for(uint32_t i = 0; i < numOfVoxels; ++i)
@@ -138,7 +142,7 @@ void Voxelizer::readActiveSite(std::string activeSite)
   std::ifstream in(activeSite.c_str());
 	std::string s; //use to exctract data
 	uint64_t tempNumVoxels;
-	double tempVoxelSize, temp_x_tranform, temp_y_tranform, temp_z_tranform;
+	double tempVoxelSize, temp_x_tranform, temp_y_tranform, temp_z_tranform, tempBindingEnergy;
 
   if(in.good()) {
 		in >> s; //read in fileType, MoleculeGrid V1.0, .mg in the future possibly
@@ -152,17 +156,20 @@ void Voxelizer::readActiveSite(std::string activeSite)
 		in >> tempVoxelSize;
 		in >> s; //get rid of "tranforms: "
 		in >> temp_x_tranform >> temp_y_tranform >> temp_z_tranform;
+		in >> s; in >> s;
+		in >> tempBindingEnergy;
 
 		if(site_active) //grid will be alive arleady with cube dimensions numOfVoxels and numOfVoxels and voxelSize set
 		{
 			if(tempNumVoxels != numOfVoxels) //throw error or do nothing and continue to add to the handled space
 				throw "Molecule spaces must be the same size.";
-
+			bindingEnergy = tempBindingEnergy;
 		}
 		else
 		{
 			numOfVoxels = tempNumVoxels;
 			voxelSize = tempVoxelSize;
+			bindingEnergy = 0; //if the active site is the only thing present, it doesn't make sense to have a non-zero binding energy
 			resizeGrid(); //allocate cube with dimensions numOfVoxels
 		}
 

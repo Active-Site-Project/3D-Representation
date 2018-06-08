@@ -79,7 +79,7 @@ int main(int argc, char** argv)
       path += " ";
       path += argv[2]; //path now holds "active-site-path molFile-path" or  "active-site-path active-site-path" with space in the middle for seperator
     }
-    else if(path.find(".mol") != std::string::npos) {  //.mol found
+    else if(path.find(".mol") != std::string::npos || path.find(".sdf") != std::string::npos) {  //.mol found
       voxelSize = std::atof(argv[2]);
       voxels = std::atoi(argv[4]); //will be 4th argument, molfile voxelSize outFile numOfVoxels... might need error checking later
     }
@@ -161,7 +161,7 @@ void createMoleculeSpace(const std::string path, const double voxelSize, const u
   }
 
   //at this point we should have some positive value for voxelSize and a directory for the molFile
-  MolParse m(directory, fileName);
+  ChemParse m(directory, fileName);
   try{
     m.parseData();  //this will throw error if cannot access molFile
     v.setMolecule(m); //at this point we have valid molFile data if no errors thrown
@@ -199,7 +199,7 @@ void molWithMolecule(const std::string path, const std::string outFile) //path c
     return;
   }
 
-  MolParse m(molFileDirectory, molFileName); //by now we have directories and will use a try catch in case user gave bad info
+  ChemParse m(molFileDirectory, molFileName); //by now we have directories and will use a try catch in case user gave bad info
 
   try {
     v.readActiveSite(activeSitePath); //open the existing active site

@@ -9,7 +9,7 @@ class Atom
   public:
     Atom(); //default constructor
     Atom(double, double, double, std::string);
-    friend class MolParse; //make MolParse a friend class to set private data members in parseData function
+    friend class ChemParse; //make ChemParse a friend class to set private data members in parseData function
     double getX() const; //returns x
     double getY() const; //returns y
     double getZ() const; //returns z

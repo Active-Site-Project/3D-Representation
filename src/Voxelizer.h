@@ -1,7 +1,7 @@
 #ifndef VOXELIZER_H_NAP
 #define VOXELIZER_H_NAP
 
-#include "MolParse.h"
+#include "ChemParse.h"
 #include "Voxel.h"
 #include <fstream>
 #include <vector>
@@ -12,9 +12,9 @@ class Voxelizer
 {
   private:
 	  std::vector<std::vector<std::vector<Voxel>>> grid; //3 dimensional vector of voxels for the grid
-	  MolParse molecule;
+	  ChemParse molecule;
 	  uint32_t numOfVoxels; //grid dimensions determined by numOfVoxels, i.e numOfVoxels length, width, height in grid since cube
-	  double voxelSize;   //will be length width and height of each voxel
+	  double voxelSize, bindingEnergy;   //will be length width and height of each voxel
 	  double x_transform, y_transform, z_transform; //transform entire molecule onto pos xy plane, 1st octet
     bool voxelized_flag, site_active; //use to know if voxelized and site active, site will be active without being voxelized, when reading in an existing active_site
 	  void setGrid(const Atom * const &, uint32_t); //finds transform to move all points into octet 1 (x,y,z > 0), and cube dimensions in numOfVoxels
@@ -22,13 +22,13 @@ class Voxelizer
     void resizeGrid(); //helper function to resize grid when needed
 
   public:
-	  Voxelizer(); //empty grid, will need to provide molParse object to voxelize later with Voxelize function
+	  Voxelizer(); //empty grid, will need to provide ChemParse object to voxelize later with Voxelize function
 	  Voxelizer(const Voxelizer &); //object must be voxelized even if copied object has been voxelized
-	  Voxelizer(const MolParse &, double = 0.5, uint32_t = 0); //automatically starts the grid with 0.5 voxelSize... RECOMMENDED
+	  Voxelizer(const ChemParse &, double = 0.5, uint32_t = 0); //automatically starts the grid with 0.5 voxelSize... RECOMMENDED
 
 	  void setVoxelSize(double v_size); //set dimensions for cubic voxel in angstrums
     void setDimensions(uint32_t); //sets numOfVoxels which is the cubic dimensions of the VoxelGrid
-    void setMolecule(const MolParse &); //set molparse object associated with voxel Grid
+    void setMolecule(const ChemParse &); //set ChemParse object associated with voxel Grid
 
 	  uint32_t getDimensions(); //returns dimensions of voxel Grid in number of voxels per dimemsion.. i.e numOfVoxels x numOfVoxels x numOfVoxels,.. max lenght width and height of grid
 	  double getVoxelSize(); //returns length of one voxel side in angstrums,.. note: voxel is a cube in space, volume = voxelSize^3

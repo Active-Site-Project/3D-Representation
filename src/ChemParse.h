@@ -1,19 +1,21 @@
-#ifndef MOL_PARSE_H
-#define MOL_PARSE_H
-
+#ifndef CHEM_PARSE_H
+#define CHEM_PARSE_H
 #include <fstream>
 #include <string>
 #include "Atom.h"
 
-class MolParse
+class ChemParse
 {
   public:
-    MolParse(); //default constructor - do not recommend as original directory setup is probably different than what we need
-    MolParse(std::string directory); //constructor that initializes a directory that can contain multiple mol files
-    MolParse(std::string directory, std::string filename); //constructor that initializes a directory and a specific filename
+    ChemParse(); //default constructor - do not recommend as original directory setup is probably different than what we need
+    ChemParse(std::string directory); //constructor that initializes a directory that can contain multiple mol files
+    ChemParse(std::string directory, std::string filename); //constructor that initializes a directory and a specific filename
     void parseData(); //function that parses mol file and retrieves coordinate and bonding information
+    void parseMol();
+    void parseSDF();
     int getAtomCount() const; //returns number of atoms in mol file
     int getBondCount() const; //returns number of bonds in mol file
+    double getBindingEnergy() const;
     Atom* getAtomList(); //returns list of atoms generated after parsing mol file (only use after parsing the data)
     void setDirectory(std::string); //set the directory to extract mol files
     void setFileName(std::string); //set the filename that parseData function will extract data from
@@ -29,6 +31,8 @@ class MolParse
     int bondCount; //number of bonds (have not done much with this)
     Atom *elementList; //list of atoms w/ info extracted from mol file
     int (*bondNum)[3]; //list of bond information (possibly need to arrange this in a more intuitive manner later on)
+    double bindingEnergy;
+    int id;
 };
 
 #endif
