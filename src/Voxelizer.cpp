@@ -65,9 +65,12 @@ void Voxelizer::voxelize()
 	if(voxelSize <= 0)
 	  throw "Voxel size must be positve.";
 
+	if(!numOfVoxels)
+		throw "numOfVoxels must be set.";
+
 	setGrid(molecule.getAtomList(), molecule.getAtomCount()); //set x,y,z transforms and numOfVoxels
 
-  if(numOfVoxels != 0 && grid.size() == 0) //checks if we already have a grid || no voxels needed so empty mol file
+  if(grid.size() == 0) //checks if we already have a grid
     resizeGrid(); //allocate cube with dimensions numOfVoxels
 
   populateGrid(molecule.getAtomList(), molecule.getAtomCount()); //this is where voxel proton, neutron and elctron counts will be incremented
@@ -100,7 +103,8 @@ void Voxelizer::exportJSON(const std::string outFile)
 
   //output the dimensions of the VoxelGrid as well as the size of each voxel
 	out << "VoxelGrid Dimensions: " << numOfVoxels << '\n';
-	out << "Voxel size: " << voxelSize << "\n\n"; //blank space between dimensions and voxels themselves
+	out << "Voxel size: " << voxelSize << '\n'; //blank space between dimensions and voxels themselves
+	out << "Transforms: " << x_transform << " " << y_transform << " " << z_transform << "\n\n";
 
   //for each voxel we must write its properties
   for(uint32_t i = 0; i < numOfVoxels; ++i)
@@ -134,7 +138,7 @@ void Voxelizer::readActiveSite(std::string activeSite)
   std::ifstream in(activeSite.c_str());
 	std::string s; //use to exctract data
 	uint64_t tempNumVoxels;
-	double tempVoxelSize;
+	double tempVoxelSize, temp_x_tranform, temp_y_tranform, temp_z_tranform;
 
   if(in.good()) {
 		in >> s; //read in fileType, MoleculeGrid V1.0, .mg in the future possibly
@@ -146,11 +150,13 @@ void Voxelizer::readActiveSite(std::string activeSite)
 		in >> tempNumVoxels;
 		in >> s; in >> s; //get rid of "Voxel size: "
 		in >> tempVoxelSize;
+		in >> s; //get rid of "tranforms: "
+		in >> temp_x_tranform >> temp_y_tranform >> temp_z_tranform;
 
 		if(site_active) //grid will be alive arleady with cube dimensions numOfVoxels and numOfVoxels and voxelSize set
 		{
-			if(tempNumVoxels > numOfVoxels) //throw error or do nothing and continue to add to the handled space
-				throw "Molecule space is larger than space being combined with.\n Not yet implemented.";
+			if(tempNumVoxels != numOfVoxels) //throw error or do nothing and continue to add to the handled space
+				throw "Molecule spaces must be the same size.";
 
 		}
 		else
@@ -287,7 +293,7 @@ void Voxelizer::setGrid(const Atom * const &a, uint32_t count)
 	y_transform = (min_y < 0)? -min_y: 0; //representing the opposite of the most negative value
 	z_transform = (min_z < 0)? -min_z: 0;
 
-  if (!numOfVoxels)
+  /*if (!numOfVoxels)
   {
     //number of voxels for cube will be max distance in any x rounded up, then divided by voxel size
   	double maxDistance = max_x - min_x;
@@ -297,7 +303,7 @@ void Voxelizer::setGrid(const Atom * const &a, uint32_t count)
   		maxDistance = max_z - min_z;
 
     numOfVoxels = uint32_t(maxDistance / voxelSize + 1); //add one to round up
-  }
+  }*/
 }
 
 //working
