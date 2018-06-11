@@ -111,24 +111,30 @@ void Voxelizer::exportJSON(const std::string outFile)
 	out << "Binding Energy: " << bindingEnergy << "\n\n";
 
   //for each voxel we must write its properties
-  for(uint32_t i = 0; i < numOfVoxels; ++i)
-	{
-		for(uint32_t j = 0; j < numOfVoxels; ++j)
+	  for(uint32_t i = 0; i < numOfVoxels; ++i)
 		{
-			for(uint32_t k = 0; k < numOfVoxels; ++k)
+			for(uint32_t j = 0; j < numOfVoxels; ++j)
 			{
-				out << "{\n\t"; //open new json object
-				out << "\"protons\": " << grid[i][j][k].getProtons() << ",\n\t"; //protons data member
-				out << "\"neutrons\": " << grid[i][j][k].getNeutrons() << ",\n\t"; //neutrons data member
-				out << "\"electrons\": " << grid[i][j][k].getElectrons() << "\n"; //electrons data member
-				out << "}"; //close json object
+				for(uint32_t k = 0; k < numOfVoxels; ++k)
+				{
+					if (grid[i][j][k].getElectrons())
+					{
+						out << "{\n\t"; //open new json object
+						out << "\"xpos\": "  << i << ",\n\t";
+						out << "\"ypos\": " << j << ",\n\t";
+						out << "\"zpos\": " << k << ",\n\t";
+						out << "\"protons\": " << grid[i][j][k].getProtons() << ",\n\t"; //protons data member
+						out << "\"neutrons\": " << grid[i][j][k].getNeutrons() << ",\n\t"; //neutrons data member
+						out << "\"electrons\": " << grid[i][j][k].getElectrons() << "\n"; //electrons data member
+						out << "}"; //close json object
 
-        //if not the last voxel add a comment and newline character
-				if(i != numOfVoxels - 1 || j != numOfVoxels - 1 || k != numOfVoxels - 1)
-				  out << ",\n";
+		        //if not the last voxel add a comment and newline character
+						if(i != numOfVoxels - 1 || j != numOfVoxels - 1 || k != numOfVoxels - 1)
+						  out << ",\n";
+					}
+				}
 			}
 		}
-	}
 
 	out.close();
 }
