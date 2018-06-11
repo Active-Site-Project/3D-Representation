@@ -1,0 +1,44 @@
+## Installing on Windows:
+
+1. Choose some directory for the application to be stored.
+    (e.g. ~/my/path/`)
+
+2.  If you have git installed then you can run -
+    `git clone https://github.com/Active-Site-Project/3D-Representation.git` -
+    from inside the directory that you you would like the project to be
+    installed in. If you do not have git installed,you can download the
+    repository .zip file and extract it to the directory that you would like
+    the project to be stored in.
+
+3.  In order to compile the program, you will need to use the 'make' command, which is
+    not included in Windows by default.
+
+4.  To use the makefile in Windows, you will need to install a program called Cygwin.
+    For more information about what exact Cygwin is/does, visit their website at https://cygwin.com.
+
+5.  Install Cygwin by running setup-x86_64.exe (64-bit installation) or setup-x86.exe (32-bit installation).
+    These files can be acquired from https://cygwin.com/install.html
+
+6.  Choose "Install from Internet" in the "Choose Installation Type" section.
+
+7.  Choose whatever settings you want for the succeeding sections (I recommend the default) until you get to
+    the "Select Packages" section. Make sure you remember where your root installation directory is, however, as we
+    will need it later.
+
+8.  In the search bar located at the upper-left area of the window, type "make" and press enter. Locate the package
+    called "make: the GNU version of the 'make' utility." In the row where you found the package, select the looping
+    arrows icon (in the "New" column). You should see message next to the icon change from "Skip" to some version number.
+
+9.  Click "Next" and install make (along with any other automatically included and default packages).
+
+10. Finish the installation. Now you have 'make' functionality on your Windows PC. You still can't quite use the makefile from
+    command prompt yet. In order to merge Cygwin's functionality with the command prompt, we need to add the "bin" folder
+    from root installation directory of Cygwin to the Windows PATH.
+
+11. There are many online guides that describe what the PATH is and how to add stuff to it, so I will not describe it here.
+    Additionally, the process varies slightly across different versions of Windows, but it is always fairly simple.
+    In my case, my root installation directory was C:\cygwin64, so I added C:\cygwin64\bin to my PATH. For the general case,
+    add C:\root_installation_directory_path\bin to your Windows PATH.
+
+12. Now, all you have to do is navigate to 3D-Representation/ directory and run `make` or `make -f makefile`. From there,
+    see wiki on Using The Voxelizer with Linux.
