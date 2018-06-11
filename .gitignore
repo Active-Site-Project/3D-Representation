@@ -38,6 +38,9 @@
 ehthumbs.db
 Thumbs.db
 *.json
+*.sdf
+*.mol
+batch_voxelization.sh
 
 programfiles #ignore program files directory
 Voxelizer
