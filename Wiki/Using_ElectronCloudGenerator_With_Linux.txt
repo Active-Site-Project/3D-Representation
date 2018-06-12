@@ -1,0 +1,24 @@
+Welcome to the ElectronCloudGenerator wiki!
+
+The Electron Cloud Generator will need the following inputs: (1)electron cloud radius.
+(2)the number of electrons you would like in the cloud. (3)The name you would like to save 
+the file under (do not include .txt extension as it will be added automatically).
+The file once compiled will save in the ElectronClouds folder as a .txt file.
+
+------------------------------------------------------------------------------------------
+
+#Creating A New Electron Cloud File 
+
+Run:
+	- ./ElectronCloudGenerator radius electronCount fileName
+	
+
+Notes - 
+radius = the atomic radius of the element in Angstrums
+electronCount = the number of points you would like to generate in the cloud
+fileName = the name you would like to save your file as in the ElectronClouds folder
+	
+
+In ElectronClouds/ folder you will now find your new .txt file containing the x, y, z
+coordinates of each electron in the cloud. This file is now ready to be used in the
+Voxelizer.
