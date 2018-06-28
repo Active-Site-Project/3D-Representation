@@ -1,0 +1,25 @@
+Electron Generator Wiki
+
+User inputs: Van Der Waals Radius to the nearest tenth Angstrom, Element symbol.
+Output: Text file full of electron x,y,z coordinates. File will be saved in
+        ElectronClouds folder named ElementSymbol.txt
+
+
+Purpose:
+  Creates a file containing a list of electrons evenly distributed
+  around a center point with a decaying electron density as the radius extends.
+  These files are used by the voxilizer to generate a electron cloud for each
+  atom in the ligand and the active site. We implemented our electron
+  representation in this manor in hopes to capture the ways electron clouds
+  overlap and avoid issues we see in function based electron density calculations.
+
+
+How to use:
+  In command line run:
+    Python3 EG_2.0.py arg1 arg2
+
+    replace arg 1 with the Van Der Waals radius in Angstroms to nearest tenth.
+    replace arg 2 with the element name or desired file name.
+
+  Once command has completed, navigate to the ElectronClouds folder to find the 
+  newly created .txt file.
